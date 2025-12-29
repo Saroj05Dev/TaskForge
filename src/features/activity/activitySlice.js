@@ -22,8 +22,13 @@ const activitySlice = createSlice({
   },
   reducers: {
     prependActivity(state, action) {
-      state.items.unshift(action.payload);
-      state.items = state.items.slice(0, 20);
+      const exists = state.items.find(
+        (item) => item._id === action.payload._id
+      );
+      if (!exists) {
+        state.items.unshift(action.payload);
+        state.items = state.items.slice(0, 20);
+      }
     },
   },
   extraReducers: (builder) => {

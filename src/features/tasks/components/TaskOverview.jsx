@@ -4,23 +4,66 @@ import { useNavigate } from "react-router-dom";
 import { useTasks } from "@/hooks/useTasks";
 import { fetchActivities } from "@/features/activity/activitySlice";
 
+import {
+  Pencil,
+  PlusCircle,
+  Trash2,
+  UserPlus,
+  MessageCircle,
+  Paperclip,
+  CheckCircle,
+} from "lucide-react";
+
+const getActionIcon = (type) => {
+  switch (type) {
+    case "created":
+    case "subtask_added":
+      return PlusCircle;
+    case "updated":
+    case "subtask_updated":
+      return Pencil;
+    case "deleted":
+      return Trash2;
+    case "member_invited":
+      return UserPlus;
+    case "comment_added":
+      return MessageCircle;
+    case "attachment_added":
+      return Paperclip;
+    case "assigned":
+      return CheckCircle;
+    default:
+      return Pencil;
+  }
+};
+
+const getRelativeTime = (date) => {
+  const diff = Date.now() - new Date(date).getTime();
+  const seconds = Math.floor(diff / 1000);
+
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hr ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? "s" : ""} ago`;
+};
+
 const TaskOverview = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { total, completed } = useTasks();
-  const activities = useSelector(
-    (state) => state.activity.items
-  );
+  const activities = useSelector((state) => state.activity.items);
 
   useEffect(() => {
     dispatch(fetchActivities()); // fetch once
   }, [dispatch]);
 
-  const progress =
-    total === 0 ? 0 : Math.round((completed / total) * 100);
+  const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-  // ✅ Only last 5 actions for dashboard preview
+  // Only last 5 actions for dashboard preview
   const recentFiveActivities = activities.slice(0, 5);
 
   return (
@@ -78,21 +121,45 @@ const TaskOverview = () => {
         </p>
       ) : (
         <ul style={{ marginTop: "8px" }}>
-          {recentFiveActivities.map((activity) => (
-            <li
-              key={activity._id}
-              style={{ marginBottom: "6px", fontSize: "14px" }}
-            >
-              • <strong>{activity.user?.fullName}</strong>{" "}
-              {activity.actionType.replace("_", " ")}
-              {activity.task && (
-                <>
-                  {" "}
-                  on <strong>{activity.task.title}</strong>
-                </>
-              )}
-            </li>
-          ))}
+          {recentFiveActivities.map((activity) => {
+            const Icon = getActionIcon(activity.actionType);
+
+            return (
+              <li
+                key={activity._id}
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  marginBottom: "10px",
+                  fontSize: "14px",
+                }}
+              >
+                <Icon size={16} style={{ marginTop: "3px" }} />
+
+                <div>
+                  <div>
+                    <strong>{activity.user?.fullName}</strong>{" "}
+                    {activity.actionType.replace("_", " ")}
+                    {activity.task && (
+                      <>
+                        {" "}
+                        on <strong>{activity.task.title}</strong>
+                      </>
+                    )}
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "#6b7280",
+                    }}
+                  >
+                    {getRelativeTime(activity.createdAt)}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
 
