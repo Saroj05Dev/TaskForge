@@ -1,25 +1,69 @@
-import EmptyState from "@/components/ui/EmptyState";
-import Alert from "@/components/ui/Alert";
+import {
+  DndContext,
+  closestCenter,
+} from "@dnd-kit/core";
+import {
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core";
+import { useDispatch } from "react-redux";
 
-import React from 'react'
+import { useTasks } from "@/hooks/useTasks";
+import { updateTaskStatus } from "@/features/tasks/taskSlice";
+import KanbanColumn from "./KanbanColumns";
 
 const KanbanBoard = () => {
-  return (
-    <div className="card">
-      <div className="flex justify-between mb-4">
-        <h2 className="font-medium">Kanban Board</h2>
-        <button className="btn-primary">Refresh</button>
-      </div>
+  const dispatch = useDispatch();
+  const { tasks } = useTasks();
 
-      <Alert type="error" message="Failed to load tasks. Please try again." />
-
-      <div className="grid grid-cols-3 gap-4 mt-4">
-        <EmptyState title="Todo" />
-        <EmptyState title="In Progress" />
-        <EmptyState title="Done" />
-      </div>
-    </div>
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    })
   );
-}
 
-export default KanbanBoard
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const taskId = active.id;
+    const newStatus = over.id;
+
+    dispatch(
+      updateTaskStatus({
+        id: taskId,
+        status: newStatus,
+      })
+    );
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="grid grid-cols-3 gap-6 mt-4">
+        <KanbanColumn
+          id="Todo"
+          title="Todo"
+          tasks={tasks.filter((t) => t.status === "Todo")}
+        />
+        <KanbanColumn
+          id="In Progress"
+          title="In Progress"
+          tasks={tasks.filter((t) => t.status === "In Progress")}
+        />
+        <KanbanColumn
+          id="Done"
+          title="Done"
+          tasks={tasks.filter((t) => t.status === "Done")}
+        />
+      </div>
+    </DndContext>
+  );
+};
+
+export default KanbanBoard;

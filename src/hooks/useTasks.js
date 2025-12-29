@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 export const useTasks = () => {
-  const tasks = useSelector((state) => state.tasks?.items || []);
+  const tasks = useSelector((state) => state.tasks.items);
 
   const total = tasks.length;
   const inProgress = tasks.filter(
@@ -12,6 +12,7 @@ export const useTasks = () => {
   ).length;
 
   return {
+    tasks,
     total,
     inProgress,
     completed,

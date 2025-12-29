@@ -1,11 +1,9 @@
-import React from 'react'
-
-const EmptyState = () => {
+const EmptyState = ({ message }) => {
   return (
-    <div>
-      EmptyState here
+    <div className="text-sm text-muted text-center py-8">
+      {message}
     </div>
-  )
-}
+  );
+};
 
-export default EmptyState
+export default EmptyState;
