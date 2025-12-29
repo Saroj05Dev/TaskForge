@@ -1,11 +1,16 @@
-import AppRoutes from "./routes";
-// import Dashboard from "./pages/Dashboard";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import AppRoutes from "@/routes";
+import { restoreSession } from "@/features/auth/login/loginSlice";
 
 const App = () => {
+  const dispatch = useDispatch();
 
-  return (
-    <AppRoutes />
-  );
+  useEffect(() => {
+    dispatch(restoreSession());
+  }, [dispatch]);
+
+  return <AppRoutes />;
 };
 
 export default App;

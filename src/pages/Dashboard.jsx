@@ -3,9 +3,19 @@ import TaskStats from "@/features/tasks/components/TaskStats";
 import TaskOverview from "@/features/tasks/components/TaskOverview";
 import KanbanBoard from "@/features/tasks/components/KanbanBoard";
 import TeamQuickActions from "@/features/teams/components/TeamQuickActions";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchTasks } from "../features/tasks/taskSlice";
 
 
 const Dashboard = () => {
+
+    const dispatch = useDispatch();
+    // Fetching tasks everytime when Dashboard mounts
+    useEffect(() => {
+        dispatch(fetchTasks())
+    }, [dispatch]);
+
   return (
     <DashboardLayout>
       {/* Header */}

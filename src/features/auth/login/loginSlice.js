@@ -1,54 +1,97 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  loginApi,
+  getCurrentUserApi,
+  logoutApi,
+} from "./login.api";
 
 /**
- * Async thunk (login)
- * API integration will come next
+ * LOGIN
  */
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      // API call will be added later
-      return { user: null };
+      const response = await loginApi(credentials);
+      return response.data.data.userData;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Login failed"
+      );
     }
   }
 );
 
-const initialState = { 
+/**
+ * RESTORE SESSION (cookie-based)
+ */
+export const restoreSession = createAsyncThunk(
+  "auth/restoreSession",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getCurrentUserApi();
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue("Not authenticated");
+    }
+  }
+);
+
+/**
+ * LOGOUT
+ */
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async () => {
+    await logoutApi();
+  }
+);
+
+const initialState = {
   user: null,
-  isAuthenticated: true,
+  isAuthenticated: false,
   loading: false,
   error: null,
 };
 
 const loginSlice = createSlice({
-  name: "login",
+  name: "auth",
   initialState,
-  reducers: {
-    logout(state) {
-      state.user = null;
-      state.isAuthenticated = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+
+      // LOGIN
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // RESTORE SESSION
+      .addCase(restoreSession.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(restoreSession.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+
+      // LOGOUT
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
       });
   },
 });
 
-export const { logout } = loginSlice.actions;
 export default loginSlice.reducer;

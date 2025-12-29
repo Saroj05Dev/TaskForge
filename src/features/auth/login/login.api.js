@@ -1,14 +1,10 @@
 import axiosInstance from "@/helpers/axiosInstance";
 
-export const loginApi = (data) => {
-    return axiosInstance.post("/users/login", data);
+export const loginApi = (data) =>
+  axiosInstance.post("/users/login", data);
 
-}
+export const logoutApi = () =>
+  axiosInstance.post("/users/logout");
 
-export const logoutApi = () => {
-    return axiosInstance.post("/users/logout");
-}
-
-export const getCurrentUserApi = () => {
-    return axiosInstance.get("/users/me");
-}
+export const getCurrentUserApi = () =>
+  axiosInstance.get("/users/me");

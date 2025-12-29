@@ -5,16 +5,11 @@ export const useTasks = () => {
 
   const total = tasks.length;
   const inProgress = tasks.filter(
-    (task) => task.status === "In Progress"
+    (t) => t.status === "In Progress"
   ).length;
   const completed = tasks.filter(
-    (task) => task.status === "Done"
+    (t) => t.status === "Done"
   ).length;
 
-  return {
-    tasks,
-    total,
-    inProgress,
-    completed,
-  };
+  return { tasks, total, inProgress, completed };
 };

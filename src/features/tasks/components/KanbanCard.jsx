@@ -10,7 +10,7 @@ const KanbanCard = ({ task }) => {
     transition,
     isDragging,
   } = useDraggable({
-    id: task.id,
+    id: task._id,
   });
 
   const style = {

@@ -10,7 +10,10 @@ import {
 import { useDispatch } from "react-redux";
 
 import { useTasks } from "@/hooks/useTasks";
-import { updateTaskStatus } from "@/features/tasks/taskSlice";
+import {
+  updateTaskStatus,
+  persistTaskStatus,
+} from "@/features/tasks/taskSlice";
 import KanbanColumn from "./KanbanColumns";
 
 const KanbanBoard = () => {
@@ -31,12 +34,11 @@ const KanbanBoard = () => {
     const taskId = active.id;
     const newStatus = over.id;
 
-    dispatch(
-      updateTaskStatus({
-        id: taskId,
-        status: newStatus,
-      })
-    );
+    // 1️ Optimistic UI update
+    dispatch(updateTaskStatus({ id: taskId, status: newStatus }));
+
+    // 2️ Persist change to backend
+    dispatch(persistTaskStatus({ id: taskId, status: newStatus }));
   };
 
   return (

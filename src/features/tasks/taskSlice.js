@@ -1,50 +1,83 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchTasksApi, updateTaskApi } from "./task.api";
 
 const initialState = {
-  items: [
-    {
-      id: "1",
-      title: "Design dashboard layout",
-      status: "Todo",
-    },
-    {
-      id: "2",
-      title: "Setup Redux store",
-      status: "In Progress",
-    },
-    {
-      id: "3",
-      title: "Implement login flow",
-      status: "Done",
-    },
-  ],
+  items: [],
   loading: false,
   error: null,
 };
+
+export const fetchTasks = createAsyncThunk(
+  "tasks/fetchAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetchTasksApi();
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue("Failed to load tasks");
+    }
+  }
+);
+
+export const persistTaskStatus = createAsyncThunk(
+  "tasks/persistStatus",
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await updateTaskApi(id, { status });
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue({ id });
+    }
+  }
+);
 
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    addTask(state, action) {
-      state.items.push(action.payload);
-    },
     updateTaskStatus(state, action) {
       const { id, status } = action.payload;
-      const task = state.items.find((t) => t.id === id);
+      const task = state.items.find((t) => t._id === id);
       if (task) {
+        task.previousStatus = task.status;
         task.status = status;
       }
     },
-    removeTask(state, action) {
-      state.items = state.items.filter(
-        (task) => task.id !== action.payload
-      );
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // FETCH TASKS
+      .addCase(fetchTasks.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchTasks.rejected, (state) => {
+        state.loading = false;
+      })
+
+      // PERSIST STATUS
+      .addCase(persistTaskStatus.fulfilled, (state, action) => {
+        const updatedTask = action.payload;
+        const index = state.items.findIndex(
+          (t) => t._id === updatedTask._id
+        );
+        if (index !== -1) {
+          state.items[index] = updatedTask;
+        }
+      })
+      .addCase(persistTaskStatus.rejected, (state, action) => {
+        const { id } = action.payload;
+        const task = state.items.find((t) => t._id === id);
+        if (task) {
+          task.status = task.previousStatus;
+          delete task.previousStatus;
+        }
+      });
   },
 });
 
-export const { addTask, updateTaskStatus, removeTask } =
-  taskSlice.actions;
-
+export const { updateTaskStatus } = taskSlice.actions;
 export default taskSlice.reducer;
