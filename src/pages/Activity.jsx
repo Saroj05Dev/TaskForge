@@ -1,9 +1,30 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchActivities } from "@/features/activity/activitySlice";
+import ActivityList from "@/features/activity/components/ActivityList";
 import DashboardLayout from "@/layouts/DashboardLayout";
 
 const Activity = () => {
+  const dispatch = useDispatch();
+  const { items, loading } = useSelector(
+    (state) => state.activity
+  );
+
+  useEffect(() => {
+    dispatch(fetchActivities(20));
+  }, [dispatch]);
+
   return (
     <DashboardLayout>
-      <h1 className="text-2xl font-semibold">Activity Log</h1>
+      <h1 className="text-xl font-semibold mb-4">
+        Activity Log
+      </h1>
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ActivityList activities={items} />
+      )}
     </DashboardLayout>
   );
 };
