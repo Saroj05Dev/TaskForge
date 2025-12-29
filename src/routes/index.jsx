@@ -18,46 +18,17 @@ const AppRoutes = () => {
         {/* Default */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        {/* Public Routes */}
+        {/* PUBLIC ROUTES */}
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/tasks"
-          element={
-            <ProtectedRoute>
-              <Tasks />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/activity"
-          element={
-            <ProtectedRoute>
-              <Activity />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
+        {/* PROTECTED ROUTES */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/activity" element={<Activity />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
 
         {/* Fallback */}
         <Route path="*" element={<NotFound />} />

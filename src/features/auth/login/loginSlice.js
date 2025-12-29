@@ -4,6 +4,7 @@ import {
   getCurrentUserApi,
   logoutApi,
 } from "./login.api";
+import { signupUser } from "../signup/signupSlice";
 
 /**
  * LOGIN
@@ -75,7 +76,10 @@ const loginSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
       // RESTORE SESSION
       .addCase(restoreSession.fulfilled, (state, action) => {
         state.user = action.payload;

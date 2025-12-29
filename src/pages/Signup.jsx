@@ -1,5 +1,7 @@
+import SignupContainer from "../features/auth/signup/SignupContainer";
+
 const Signup = () => {
-  return <h1>Signup</h1>;
+  return <SignupContainer />;
 };
 
 export default Signup;

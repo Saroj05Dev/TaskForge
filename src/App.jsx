@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import AppRoutes from "@/routes";
 import { restoreSession } from "@/features/auth/login/loginSlice";
 import { socket } from "@/helpers/socket";
-import { prependActivity } from "./features/activity/activitySlice";
+import { prependActivity } from "@/features/activity/activitySlice";
 
 const App = () => {
   const dispatch = useDispatch();
