@@ -10,6 +10,7 @@ import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import NotFound from "@/pages/NotFound";
+import TaskDetails from "../features/tasks/TaskDetails";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
         {/* PROTECTED ROUTES */}
         <Route element={<ProtectedRoute />}>
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/tasks/:taskId" element={<TaskDetails />} />
           <Route path="/activity" element={<Activity />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

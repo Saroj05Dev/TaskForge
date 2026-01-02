@@ -22,7 +22,7 @@ const KanbanColumn = ({ id, title, tasks }) => {
       ) : (
         <div className="space-y-3">
           {tasks.map((task) => (
-            <KanbanCard key={task.id} task={task} />
+            <KanbanCard key={task._id} task={task} />
           ))}
         </div>
       )}

@@ -1,10 +1,8 @@
-import DashboardLayout from "@/layouts/DashboardLayout";
+import TaskContainer from "../features/tasks/TaskContainer";
 
 const Tasks = () => {
   return (
-    <DashboardLayout>
-      <h1 className="text-2xl font-semibold">Tasks</h1>
-    </DashboardLayout>
+    <TaskContainer />
   );
 };
 

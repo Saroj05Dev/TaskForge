@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchActivities } from "@/features/activity/activitySlice";
 import ActivityList from "@/features/activity/components/ActivityList";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import Loader from "../components/ui/Loader";
 
 const Activity = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Activity = () => {
       </h1>
 
       {loading ? (
-        <p>Loading...</p>
+        <Loader />
       ) : (
         <ActivityList activities={items} />
       )}
