@@ -14,7 +14,7 @@ const getPriorityColor = (priority) => {
   }
 };
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, onEdit }) => {
   const navigate = useNavigate();
 
   return (
@@ -67,7 +67,7 @@ const TaskCard = ({ task }) => {
       </div>
 
       {/* Actions */}
-      <TaskActions task={task} />
+      <TaskActions task={task} onEdit={onEdit} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   assignTaskApi,
+  createTaskApi,
   deleteTaskApi,
   fetchTasksApi,
   updateTaskApi,
@@ -13,6 +14,30 @@ const initialState = {
 };
 
 /* ---------------- THUNKS ---------------- */
+
+export const createTask = createAsyncThunk(
+  "tasks/create",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await createTaskApi(data);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue("Failed to create task");
+    }
+  }
+);
+
+export const updateTask = createAsyncThunk(
+  "tasks/update",
+  async ({ taskId, data }, { rejectWithValue }) => {
+    try {
+      const response = await updateTaskApi(taskId, data);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue("Failed to update task");
+    }
+  }
+);
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchAll",
@@ -93,20 +118,29 @@ const taskSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      /* ---------- CREATE ---------- */
+      .addCase(createTask.fulfilled, (state, action) => {
+        state.items.unshift(action.payload);
+      })
+      /* ---------- UPDATE ---------- */
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          (t) => t._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        }
+      })
 
       /* ---------- DELETE ---------- */
       .addCase(deleteTask.fulfilled, (state, action) => {
-        state.items = state.items.filter(
-          (t) => t._id !== action.payload
-        );
+        state.items = state.items.filter((t) => t._id !== action.payload);
       })
 
       /* ---------- SMART ASSIGN ---------- */
       .addCase(smartAssignTask.fulfilled, (state, action) => {
         const updatedTask = action.payload;
-        const index = state.items.findIndex(
-          (t) => t._id === updatedTask._id
-        );
+        const index = state.items.findIndex((t) => t._id === updatedTask._id);
         if (index !== -1) {
           state.items[index] = updatedTask;
         }
@@ -115,9 +149,7 @@ const taskSlice = createSlice({
       /* ---------- PERSIST STATUS ---------- */
       .addCase(persistTaskStatus.fulfilled, (state, action) => {
         const updatedTask = action.payload;
-        const index = state.items.findIndex(
-          (t) => t._id === updatedTask._id
-        );
+        const index = state.items.findIndex((t) => t._id === updatedTask._id);
         if (index !== -1) {
           state.items[index] = updatedTask;
         }

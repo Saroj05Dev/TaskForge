@@ -1,5 +1,8 @@
 import axiosInstance from "@/helpers/axiosInstance";
 
+export const createTaskApi = (data) =>
+  axiosInstance.post("/tasks", data);
+
 export const fetchTasksApi = () => {
   return axiosInstance.get("/tasks");
 };
@@ -8,7 +11,7 @@ export const deleteTaskApi = (taskId) =>
   axiosInstance.delete(`/tasks/${taskId}`);
 
 export const assignTaskApi = (taskId) =>
-  axiosInstance.post(`/tasks/${taskId}/assign-smart`);
+  axiosInstance.put(`/tasks/${taskId}/smart-assign`);
 
 export const fetchTaskByIdApi = (taskId) =>
   axiosInstance.get(`/tasks/${taskId}`);

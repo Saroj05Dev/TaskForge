@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { deleteTask, smartAssignTask } from "../taskSlice";
 
-const TaskActions = ({ task }) => {
+const TaskActions = ({ task, onEdit }) => {
   const dispatch = useDispatch();
 
   return (
@@ -13,6 +13,15 @@ const TaskActions = ({ task }) => {
         }}
       >
         Smart Assign
+      </button>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit(task);
+        }}
+      >
+        Edit
       </button>
 
       <button

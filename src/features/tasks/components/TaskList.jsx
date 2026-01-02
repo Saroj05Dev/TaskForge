@@ -1,10 +1,14 @@
 import TaskCard from "./TaskCard";
 
-const TaskList = ({ tasks }) => {
+const TaskList = ({ tasks, onEdit }) => {
   return (
     <div>
       {tasks.map((task) => (
-        <TaskCard key={task._id} task={task} />
+        <TaskCard
+          key={task._id}
+          task={task}
+          onEdit={onEdit} 
+        />
       ))}
     </div>
   );
