@@ -1,12 +1,14 @@
 import { useDispatch } from "react-redux";
-import { deleteTask, smartAssignTask } from "../taskSlice";
+import { smartAssignTask } from "../taskSlice";
 
-const TaskActions = ({ task, onEdit }) => {
+const TaskActions = ({ task, onEdit, onDelete, disabled }) => {
   const dispatch = useDispatch();
 
   return (
-    <div style={{ marginTop: "8px" }}>
+    <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
+      {/* SMART ASSIGN */}
       <button
+        disabled={disabled}
         onClick={(e) => {
           e.stopPropagation();
           dispatch(smartAssignTask(task._id));
@@ -15,7 +17,9 @@ const TaskActions = ({ task, onEdit }) => {
         Smart Assign
       </button>
 
+      {/* EDIT */}
       <button
+        disabled={disabled}
         onClick={(e) => {
           e.stopPropagation();
           onEdit(task);
@@ -24,10 +28,12 @@ const TaskActions = ({ task, onEdit }) => {
         Edit
       </button>
 
+      {/* DELETE (CONFIRM MODAL) */}
       <button
+        disabled={disabled}
         onClick={(e) => {
           e.stopPropagation();
-          dispatch(deleteTask(task._id));
+          onDelete(task);
         }}
       >
         Delete

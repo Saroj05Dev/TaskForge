@@ -5,46 +5,62 @@ import {
   fetchTasks,
   createTask,
   updateTask,
+  deleteTask,
 } from "./taskSlice";
 
 const TaskContainer = () => {
   const dispatch = useDispatch();
-  const { items, loading } = useSelector(
+  const { items, loading, saving } = useSelector(
     (state) => state.tasks
   );
 
-  const [openModal, setOpenModal] = useState(false);
-  const [editTask, setEditTask] = useState(null);
+  const [openFormModal, setOpenFormModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
-  const handleCreate = (data) => {
-    dispatch(createTask(data));
-  };
-
-  const handleEdit = (task, data) => {
-    dispatch(updateTask({ taskId: task._id, data }));
-  };
-
   return (
     <TaskPresenter
       tasks={items}
       loading={loading}
+      saving={saving}
+
+      /* ADD / EDIT */
       onAdd={() => {
-        setEditTask(null);
-        setOpenModal(true);
+        setSelectedTask(null);
+        setOpenFormModal(true);
       }}
       onEdit={(task) => {
-        setEditTask(task);
-        setOpenModal(true);
+        setSelectedTask(task);
+        setOpenFormModal(true);
       }}
-      openModal={openModal}
-      closeModal={() => setOpenModal(false)}
-      editTask={editTask}
-      onCreate={handleCreate}
-      onUpdate={handleEdit}
+
+      /* DELETE */
+      onDelete={(task) => {
+        setSelectedTask(task);
+        setOpenDeleteModal(true);
+      }}
+
+      /* MODALS */
+      openFormModal={openFormModal}
+      closeFormModal={() => setOpenFormModal(false)}
+
+      openDeleteModal={openDeleteModal}
+      closeDeleteModal={() => setOpenDeleteModal(false)}
+
+      selectedTask={selectedTask}
+
+      onCreate={(data) => dispatch(createTask(data))}
+      onUpdate={(data) =>
+        dispatch(updateTask({ taskId: selectedTask._id, data }))
+      }
+      onConfirmDelete={() => {
+        dispatch(deleteTask(selectedTask._id));
+        setOpenDeleteModal(false);
+      }}
     />
   );
 };

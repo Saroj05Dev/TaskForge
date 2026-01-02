@@ -1,6 +1,6 @@
 import TaskCard from "./TaskCard";
 
-const TaskList = ({ tasks, onEdit }) => {
+const TaskList = ({ tasks, onEdit, onDelete, saving }) => {
   return (
     <div>
       {tasks.map((task) => (
@@ -8,6 +8,8 @@ const TaskList = ({ tasks, onEdit }) => {
           key={task._id}
           task={task}
           onEdit={onEdit} 
+          onDelete={onDelete}
+          saving={saving}
         />
       ))}
     </div>

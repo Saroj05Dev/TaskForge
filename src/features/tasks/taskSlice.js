@@ -10,10 +10,10 @@ import {
 const initialState = {
   items: [],
   loading: false,
+  saving: false,
   error: null,
 };
 
-/* ---------------- THUNKS ---------------- */
 
 export const createTask = createAsyncThunk(
   "tasks/create",
@@ -87,7 +87,6 @@ export const persistTaskStatus = createAsyncThunk(
   }
 );
 
-/* ---------------- SLICE ---------------- */
 
 const taskSlice = createSlice({
   name: "tasks",
@@ -105,7 +104,6 @@ const taskSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      /* ---------- FETCH ---------- */
       .addCase(fetchTasks.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -118,11 +116,16 @@ const taskSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      /* ---------- CREATE ---------- */
+      .addCase(createTask.pending, (state) => {
+        state.saving = true;
+      })
       .addCase(createTask.fulfilled, (state, action) => {
         state.items.unshift(action.payload);
+        state.saving = false;
       })
-      /* ---------- UPDATE ---------- */
+      .addCase(updateTask.pending, (state) => {
+        state.saving = true;
+      })
       .addCase(updateTask.fulfilled, (state, action) => {
         const index = state.items.findIndex(
           (t) => t._id === action.payload._id
@@ -130,14 +133,16 @@ const taskSlice = createSlice({
         if (index !== -1) {
           state.items[index] = action.payload;
         }
+        state.saving = false;
       })
-
-      /* ---------- DELETE ---------- */
+      .addCase(deleteTask.pending, (state) => {
+        state.saving = true;
+      })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.items = state.items.filter((t) => t._id !== action.payload);
+        state.saving = false;
       })
 
-      /* ---------- SMART ASSIGN ---------- */
       .addCase(smartAssignTask.fulfilled, (state, action) => {
         const updatedTask = action.payload;
         const index = state.items.findIndex((t) => t._id === updatedTask._id);

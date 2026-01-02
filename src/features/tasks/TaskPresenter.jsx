@@ -1,17 +1,26 @@
 import TaskList from "./components/TaskList";
 import Loader from "@/components/ui/Loader";
 import TaskFormModal from "./components/TaskFormModal";
+import DeleteConfirmModal from "./components/DeleteConfirmModal";
 
 const TaskPresenter = ({
   tasks,
   loading,
+
   onAdd,
   onEdit,
-  openModal,
-  closeModal,
-  editTask,
+  onDelete,
+
+  openFormModal,
+  closeFormModal,
+
+  openDeleteModal,
+  closeDeleteModal,
+
+  selectedTask,
   onCreate,
   onUpdate,
+  onConfirmDelete,
 }) => {
   if (loading) return <Loader />;
 
@@ -28,16 +37,29 @@ const TaskPresenter = ({
         <button onClick={onAdd}>+ Add Task</button>
       </div>
 
-      <TaskList tasks={tasks} onEdit={onEdit} />
+      <TaskList
+        tasks={tasks}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
 
+      {/* CREATE / EDIT MODAL */}
       <TaskFormModal
-        open={openModal}
-        onClose={closeModal}
-        mode={editTask ? "edit" : "create"}
-        initialData={editTask}
+        open={openFormModal}
+        onClose={closeFormModal}
+        mode={selectedTask ? "edit" : "create"}
+        initialData={selectedTask}
         onSubmit={(data) =>
-          editTask ? onUpdate(editTask, data) : onCreate(data)
+          selectedTask ? onUpdate(data) : onCreate(data)
         }
+      />
+
+      {/* DELETE CONFIRM MODAL */}
+      <DeleteConfirmModal
+        open={openDeleteModal}
+        onClose={closeDeleteModal}
+        onConfirm={onConfirmDelete}
+        taskTitle={selectedTask?.title}
       />
     </div>
   );
