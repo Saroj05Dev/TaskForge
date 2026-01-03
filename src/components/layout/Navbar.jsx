@@ -7,9 +7,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isAuthenticated, user } = useSelector(
-    (state) => state.auth
-  );
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -17,35 +15,22 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      style={{
-        height: "64px",
-        borderBottom: "1px solid #e5e7eb",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 24px",
-      }}
-    >
+    <nav className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shadow-sm">
       {/* LEFT */}
       <div
-        style={{
-          fontWeight: "600",
-          fontSize: "18px",
-          cursor: "pointer",
-        }}
+        className="text-lg font-semibold text-gray-800 cursor-pointer hover:text-blue-600 transition-colors"
         onClick={() => navigate("/")}
       >
-        TaskForge
+        Dashboard
       </div>
 
       {/* RIGHT */}
-      <div style={{ display: "flex", gap: "12px" }}>
+      <div className="flex items-center gap-3">
         {!isAuthenticated ? (
           <>
             <button
               onClick={() => navigate("/login")}
-              style={navButtonStyle}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
             >
               <LogIn size={16} />
               Login
@@ -53,26 +38,21 @@ const Navbar = () => {
 
             <button
               onClick={() => navigate("/signup")}
-              style={primaryButtonStyle}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 shadow-sm hover:shadow transition-all duration-200"
             >
               <UserPlus size={16} />
-              Signup
+              Sign Up
             </button>
           </>
         ) : (
           <>
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#374151",
-              }}
-            >
+            <span className="text-sm text-gray-700 font-medium">
               👋 {user?.fullName}
             </span>
 
             <button
               onClick={handleLogout}
-              style={dangerButtonStyle}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 shadow-sm hover:shadow transition-all duration-200"
             >
               <LogOut size={16} />
               Logout
@@ -82,33 +62,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-/* ---------------- STYLES ---------------- */
-
-const navButtonStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: "6px",
-  padding: "8px 12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  background: "white",
-  cursor: "pointer",
-};
-
-const primaryButtonStyle = {
-  ...navButtonStyle,
-  background: "#2563eb",
-  color: "white",
-  border: "none",
-};
-
-const dangerButtonStyle = {
-  ...navButtonStyle,
-  background: "#ef4444",
-  color: "white",
-  border: "none",
 };
 
 export default Navbar;

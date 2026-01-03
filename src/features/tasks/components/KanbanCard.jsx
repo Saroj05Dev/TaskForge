@@ -26,11 +26,14 @@ const KanbanCard = ({ task }) => {
       style={style}
       {...listeners}
       {...attributes}
-      className="rounded-md border border-border p-3 bg-card"
+      className="rounded-lg border border-gray-200 p-3.5 bg-white hover:shadow-md hover:border-gray-300 transition-all duration-200 active:cursor-grabbing active:shadow-lg"
     >
-      <p className="text-sm font-medium">
-        {task.title}
-      </p>
+      <p className="text-sm font-medium text-gray-900">{task.title}</p>
+      {task.description && (
+        <p className="text-xs text-gray-600 mt-1.5 line-clamp-2">
+          {task.description}
+        </p>
+      )}
     </div>
   );
 };

@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Paperclip,
   CheckCircle,
+  TrendingUp,
 } from "lucide-react";
 
 const getActionIcon = (type) => {
@@ -67,93 +68,77 @@ const TaskOverview = () => {
   const recentFiveActivities = activities.slice(0, 5);
 
   return (
-    <div
-      style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: "12px",
-        padding: "20px",
-      }}
-    >
+    <div className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "12px",
-        }}
-      >
-        <h2>Task Overview</h2>
-        <span>{progress}% completed</span>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="text-blue-600" size={20} />
+          <h2 className="text-lg font-semibold text-gray-900">Task Overview</h2>
+        </div>
+        <span className="text-sm font-medium text-gray-600">
+          {progress}% completed
+        </span>
       </div>
 
       {/* Progress Bar */}
-      <div style={{ marginBottom: "20px" }}>
-        <div
-          style={{
-            height: "10px",
-            width: "100%",
-            backgroundColor: "#e5e7eb",
-            borderRadius: "999px",
-            overflow: "hidden",
-          }}
-        >
+      <div className="mb-6">
+        <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
           <div
-            style={{
-              height: "100%",
-              width: `${progress}%`,
-              backgroundColor: "#22c55e",
-              transition: "width 0.4s ease",
-            }}
+            className="h-full bg-linear-to-r from-green-500 to-green-600 transition-all duration-500 ease-out rounded-full"
+            style={{ width: `${progress}%` }}
           />
         </div>
 
-        <p style={{ marginTop: "8px", fontSize: "14px" }}>
+        <p className="mt-2 text-sm text-gray-600">
           {completed} of {total} tasks completed
         </p>
       </div>
 
       {/* Recent Activity */}
-      <h4>Recent Activity</h4>
+      <h4 className="text-sm font-semibold text-gray-900 mb-3">
+        Recent Activity
+      </h4>
 
       {recentFiveActivities.length === 0 ? (
-        <p style={{ fontSize: "14px", marginTop: "8px" }}>
-          No recent activity yet
+        <p className="text-sm text-gray-500 py-4 text-center">
+          No recent activity yet. Create your first task to get started.
         </p>
       ) : (
-        <ul style={{ marginTop: "8px" }}>
+        <ul className="space-y-3">
           {recentFiveActivities.map((activity) => {
             const Icon = getActionIcon(activity.actionType);
 
             return (
               <li
                 key={activity._id}
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  marginBottom: "10px",
-                  fontSize: "14px",
-                }}
+                className="flex gap-3 text-sm hover:bg-gray-50 p-2 rounded-lg transition-colors duration-150"
               >
-                <Icon size={16} style={{ marginTop: "3px" }} />
+                <div className="shrink-0 mt-0.5">
+                  <div className="p-1.5 bg-blue-50 rounded-lg">
+                    <Icon size={14} className="text-blue-600" />
+                  </div>
+                </div>
 
-                <div>
-                  <div>
-                    <strong>{activity.user?.fullName}</strong>{" "}
-                    {activity.actionType.replace("_", " ")}
+                <div className="flex-1 min-w-0">
+                  <div className="text-gray-900">
+                    <strong className="font-semibold">
+                      {activity.user?.fullName}
+                    </strong>{" "}
+                    <span className="text-gray-600">
+                      {activity.actionType.replace("_", " ")}
+                    </span>
                     {activity.task && (
                       <>
                         {" "}
-                        on <strong>{activity.task.title}</strong>
+                        <span className="text-gray-600">on</span>{" "}
+                        <strong className="font-semibold">
+                          {activity.task.title}
+                        </strong>
                       </>
                     )}
                   </div>
 
-                  <div
-                    style={{
-                      fontSize: "12px",
-                      color: "#6b7280",
-                    }}
-                  >
+                  <div className="text-xs text-gray-500 mt-0.5">
                     {getRelativeTime(activity.createdAt)}
                   </div>
                 </div>
@@ -166,15 +151,7 @@ const TaskOverview = () => {
       {/* Show All Button */}
       <button
         onClick={() => navigate("/activity")}
-        style={{
-          marginTop: "12px",
-          fontSize: "14px",
-          color: "#2563eb",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-        }}
+        className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline transition-all duration-150"
       >
         Show all actions →
       </button>

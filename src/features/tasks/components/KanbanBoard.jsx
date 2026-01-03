@@ -1,12 +1,5 @@
-import {
-  DndContext,
-  closestCenter,
-} from "@dnd-kit/core";
-import {
-  useSensor,
-  useSensors,
-  PointerSensor,
-} from "@dnd-kit/core";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
 import { useDispatch } from "react-redux";
 
 import { useTasks } from "@/hooks/useTasks";
@@ -47,7 +40,7 @@ const KanbanBoard = () => {
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-3 gap-6 mt-4">
+      <div className="grid grid-cols-3 gap-6">
         <KanbanColumn
           id="Todo"
           title="Todo"

@@ -1,22 +1,40 @@
 import { useTasks } from "@/hooks/useTasks";
-
-import React from 'react'
 import StatCard from "../../../components/ui/StateCard";
 import { useTeam } from "../../../hooks/useTeam";
+import { CheckSquare, Clock, CheckCircle, Users } from "lucide-react";
 
 const TaskStats = () => {
-
-    const { total, inProgress, completed } = useTasks();
-    const { memberCount } = useTeam();
+  const { total, inProgress, completed } = useTasks();
+  const { memberCount } = useTeam();
 
   return (
-    <div className="grid grid-cols-4 gap-4">
-      <StatCard title="Total Tasks" value={total} />
-      <StatCard title="In Progress" value={inProgress} />
-      <StatCard title="Completed" value={completed} />
-      <StatCard title="Team Members" value={memberCount} />
+    <div className="grid grid-cols-4 gap-5">
+      <StatCard
+        title="TOTAL TASKS"
+        value={total}
+        icon={CheckSquare}
+        color="blue"
+      />
+      <StatCard
+        title="IN PROGRESS"
+        value={inProgress}
+        icon={Clock}
+        color="orange"
+      />
+      <StatCard
+        title="COMPLETED"
+        value={completed}
+        icon={CheckCircle}
+        color="green"
+      />
+      <StatCard
+        title="TEAM MEMBERS"
+        value={memberCount}
+        icon={Users}
+        color="purple"
+      />
     </div>
-  )
-}
+  );
+};
 
-export default TaskStats
+export default TaskStats;
