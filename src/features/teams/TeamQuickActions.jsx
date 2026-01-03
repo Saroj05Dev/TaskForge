@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CreateTeamModal from "./CreateTeamModal";
 import InviteMemberModal from "./InviteMemberModal";
-import { getTeamMembersApi } from "./team.api";
 import TeamMembersList from "./TeamMemberList";
+import RemoveMemberModal from "./RemoveMemberModal";
+import { getTeamMembersApi, removeMemberApi } from "./team.api";
+import { useCurrentTeam } from "../../hooks/useCurrentTeam";
 
 const TeamQuickActions = () => {
   const [openCreateTeam, setOpenCreateTeam] = useState(false);
@@ -11,24 +13,37 @@ const TeamQuickActions = () => {
   const [members, setMembers] = useState([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
 
-  // ⚠️ TEMP — later derive from auth / selected team
-  const teamId = "6951507a9087cb1b5d35b80e";
+  const [openRemove, setOpenRemove] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [removing, setRemoving] = useState(false);
 
-  const fetchMembers = async () => {
+  const { team, loading: teamLoading } = useCurrentTeam();
+
+  const fetchMembers = useCallback(async () => {
+    if (!team?._id) return;
+
     try {
       setLoadingMembers(true);
-      const res = await getTeamMembersApi(teamId);
+      const res = await getTeamMembersApi(team._id);
       setMembers(res.data.data.members || []);
     } catch (err) {
       console.error("Failed to fetch members", err);
     } finally {
       setLoadingMembers(false);
     }
-  };
+  }, [team?._id]);
 
   useEffect(() => {
     fetchMembers();
-  }, []);
+  }, [fetchMembers]);
+
+  if (teamLoading) {
+    return <p>Loading team...</p>;
+  }
+
+  if (!team) {
+    return <p>No team found</p>;
+  }
 
   return (
     <div
@@ -64,25 +79,48 @@ const TeamQuickActions = () => {
         <TeamMembersList
           members={members}
           loading={loadingMembers}
+          onRemove={(member) => {
+            setSelectedMember(member);
+            setOpenRemove(true);
+          }}
         />
       </div>
 
-      {/* MODALS */}
+      {/* CREATE TEAM MODAL */}
       <CreateTeamModal
         open={openCreateTeam}
         onClose={() => {
           setOpenCreateTeam(false);
-          fetchMembers(); // refresh
+          fetchMembers();
         }}
       />
 
+      {/* INVITE MEMBER MODAL */}
       <InviteMemberModal
         open={openInvite}
         onClose={() => {
           setOpenInvite(false);
-          fetchMembers(); // refresh
+          fetchMembers();
         }}
-        teamId={teamId}
+        teamId={team._id}
+      />
+
+      {/* REMOVE MEMBER MODAL */}
+      <RemoveMemberModal
+        open={openRemove}
+        onClose={() => setOpenRemove(false)}
+        member={selectedMember}
+        loading={removing}
+        onConfirm={async () => {
+          try {
+            setRemoving(true);
+            await removeMemberApi(team._id, selectedMember._id);
+            setOpenRemove(false);
+            fetchMembers();
+          } finally {
+            setRemoving(false);
+          }
+        }}
       />
     </div>
   );

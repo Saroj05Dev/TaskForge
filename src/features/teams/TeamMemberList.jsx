@@ -1,6 +1,4 @@
-const TeamMembersList = ({ members, loading }) => {
-  if (loading) return <p>Loading members...</p>;
-
+const TeamMembersList = ({ members, onRemove }) => {
   if (!members.length) {
     return <p>No members yet</p>;
   }
@@ -11,16 +9,35 @@ const TeamMembersList = ({ members, loading }) => {
         <li
           key={member._id}
           style={{
-            padding: "6px 0",
+            padding: "8px 0",
             borderBottom: "1px solid #e5e7eb",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <div style={{ fontWeight: 500 }}>
-            {member.fullName}
+          <div>
+            <div style={{ fontWeight: 500 }}>
+              {member.fullName}
+            </div>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#6b7280",
+              }}
+            >
+              {member.email}
+            </div>
           </div>
-          <div style={{ fontSize: "13px", color: "#6b7280" }}>
-            {member.email}
-          </div>
+
+          {onRemove && (
+            <button
+              onClick={() => onRemove(member)}
+              style={{ fontSize: "13px" }}
+            >
+              Remove
+            </button>
+          )}
         </li>
       ))}
     </ul>
