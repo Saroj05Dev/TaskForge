@@ -1,13 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { LogOut, LogIn, UserPlus } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/features/auth/login/loginSlice";
+import { Menu, LogOut, User } from "lucide-react";
 
-const Navbar = () => {
-  const dispatch = useDispatch();
+const Navbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
-
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -15,47 +14,62 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shadow-sm">
-      {/* LEFT */}
-      <div
-        className="text-lg font-semibold text-gray-800 cursor-pointer hover:text-blue-600 transition-colors"
-        onClick={() => navigate("/")}
-      >
-        Dashboard
+    <nav className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-4 md:px-6 shrink-0">
+      {/* Left: Menu Button (Mobile) */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
+          aria-label="Toggle menu"
+        >
+          <Menu size={20} />
+        </button>
+
+        <div
+          className="text-lg font-semibold text-gray-900 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          TaskForge
+        </div>
       </div>
 
-      {/* RIGHT */}
-      <div className="flex items-center gap-3">
-        {!isAuthenticated ? (
+      {/* Right: User Info & Actions */}
+      <div className="flex items-center gap-2 md:gap-3">
+        {user ? (
           <>
-            <button
-              onClick={() => navigate("/login")}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
-            >
-              <LogIn size={16} />
-              Login
-            </button>
+            {/* User Info - Hidden on small mobile */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg">
+              <User size={16} className="text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">
+                {user.fullName}
+              </span>
+            </div>
 
+            {/* Logout Button */}
             <button
-              onClick={() => navigate("/signup")}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 shadow-sm hover:shadow transition-all duration-200"
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-3 md:px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-all duration-200 shadow-sm"
             >
-              <UserPlus size={16} />
-              Sign Up
+              <LogOut size={16} />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </>
         ) : (
           <>
-            <span className="text-sm text-gray-700 font-medium">
-              👋 {user?.fullName}
-            </span>
-
+            {/* Login Button */}
             <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 shadow-sm hover:shadow transition-all duration-200"
+              onClick={() => navigate("/login")}
+              className="px-3 md:px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-all duration-200"
             >
-              <LogOut size={16} />
-              Logout
+              Login
+            </button>
+
+            {/* Sign Up Button */}
+            <button
+              onClick={() => navigate("/signup")}
+              className="px-3 md:px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm"
+            >
+              Sign Up
             </button>
           </>
         )}

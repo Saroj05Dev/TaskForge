@@ -1,14 +1,16 @@
 import { useTasks } from "@/hooks/useTasks";
-import StatCard from "../../../components/ui/StateCard";
-import { useTeam } from "../../../hooks/useTeam";
+import { useCurrentTeam } from "@/hooks/useCurrentTeam";
+import StatCard from "@/components/ui/StateCard";
 import { CheckSquare, Clock, CheckCircle, Users } from "lucide-react";
 
 const TaskStats = () => {
   const { total, inProgress, completed } = useTasks();
-  const { memberCount } = useTeam();
+  const { team } = useCurrentTeam();
+
+  const memberCount = team?.members?.length || 0;
 
   return (
-    <div className="grid grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
       <StatCard
         title="TOTAL TASKS"
         value={total}
