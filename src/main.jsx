@@ -7,11 +7,9 @@ import store from "@/store/store";
 import { ToastProvider } from "@/contexts/ToastContext";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Provider store={store}>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
-    </Provider>
-  </StrictMode>
+  <Provider store={store}>
+    <ToastProvider>
+      <App />
+    </ToastProvider>
+  </Provider>
 );

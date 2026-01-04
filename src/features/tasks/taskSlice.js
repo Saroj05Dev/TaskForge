@@ -5,6 +5,7 @@ import {
   deleteTaskApi,
   fetchTasksApi,
   updateTaskApi,
+  searchTasksApi,
 } from "./task.api";
 
 const initialState = {
@@ -13,7 +14,6 @@ const initialState = {
   saving: false,
   error: null,
 };
-
 
 export const createTask = createAsyncThunk(
   "tasks/create",
@@ -47,6 +47,18 @@ export const fetchTasks = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       return rejectWithValue("Failed to load tasks");
+    }
+  }
+);
+
+export const searchTasks = createAsyncThunk(
+  "tasks/search",
+  async (filters, { rejectWithValue }) => {
+    try {
+      const response = await searchTasksApi(filters);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue("Failed to search tasks");
     }
   }
 );
@@ -87,7 +99,6 @@ export const persistTaskStatus = createAsyncThunk(
   }
 );
 
-
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -113,6 +124,18 @@ const taskSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(fetchTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(searchTasks.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchTasks.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(searchTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
