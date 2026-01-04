@@ -24,6 +24,13 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   // On mobile: controlled by isCollapsed prop
   const shouldShowExpanded = !isCollapsed || isHovered;
 
+  const handleNavClick = () => {
+    // Close sidebar on mobile when nav item is clicked
+    if (window.innerWidth < 1024) {
+      setIsCollapsed(true);
+    }
+  };
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -78,6 +85,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={handleNavClick}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
                    ${

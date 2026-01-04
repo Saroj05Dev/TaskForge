@@ -29,24 +29,26 @@ const TaskPresenter = ({
   return (
     <DashboardLayout>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-100 rounded-lg">
             <ListTodo className="h-6 w-6 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">All Tasks</h1>
-            <p className="text-sm text-gray-600 mt-0.5">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+              All Tasks
+            </h1>
+            <p className="text-xs md:text-sm text-gray-600 mt-0.5">
               Manage and organize your tasks
             </p>
           </div>
         </div>
         <button
           onClick={onAdd}
-          className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
         >
           <Plus size={20} />
-          Add Task
+          <span className="hidden sm:inline">Add Task</span>
         </button>
       </div>
 

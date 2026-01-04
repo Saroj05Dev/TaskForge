@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/features/auth/login/loginSlice";
-import { Menu, LogOut, User } from "lucide-react";
+import { Menu, LogOut, User, CheckSquare } from "lucide-react";
 
 const Navbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
@@ -15,14 +15,23 @@ const Navbar = ({ onMenuClick }) => {
 
   return (
     <nav className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-4 md:px-6 shrink-0">
-      {/* Left: Menu Button (Mobile) */}
-      <div className="flex items-center gap-3">
+      {/* Left: Menu Button (Mobile) + Tasks Link (Mobile) + Brand */}
+      <div className="flex items-center gap-2">
         <button
           onClick={onMenuClick}
           className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
           aria-label="Toggle menu"
         >
           <Menu size={20} />
+        </button>
+
+        {/* Tasks Link - Mobile Only */}
+        <button
+          onClick={() => navigate("/tasks")}
+          className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+        >
+          <CheckSquare size={16} />
+          Tasks
         </button>
 
         <div

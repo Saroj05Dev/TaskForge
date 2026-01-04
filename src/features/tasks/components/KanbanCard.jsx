@@ -26,7 +26,7 @@ const KanbanCard = ({ task }) => {
       style={style}
       {...listeners}
       {...attributes}
-      className="rounded-lg border border-gray-200 p-3.5 bg-white hover:shadow-md hover:border-gray-300 transition-all duration-200 active:cursor-grabbing active:shadow-lg"
+      className="rounded-lg border border-gray-200 p-3.5 bg-white hover:shadow-md hover:border-gray-300 active:cursor-grabbing active:shadow-lg"
     >
       <p className="text-sm font-medium text-gray-900">{task.title}</p>
       {task.description && (
