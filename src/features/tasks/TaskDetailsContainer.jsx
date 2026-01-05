@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchComments } from "@/features/tasks/commentsSlice";
 import { fetchAttachments } from "@/features/tasks/attachmentsSlice";
+import { fetchSubtasks } from "@/features/tasks/subtasksSlice";
 import { smartAssignTask } from "@/features/tasks/taskSlice";
 import { useToast } from "@/contexts/ToastContext";
 import { useComments } from "@/hooks/useComments";
 import { useAttachments } from "@/hooks/useAttachments";
+import { useSubtasks } from "@/hooks/useSubtasks";
 import TaskDetailsPresenter from "./TaskDetailsPresenter";
 
 const TaskDetailsContainer = () => {
@@ -31,9 +33,16 @@ const TaskDetailsContainer = () => {
     uploading: uploadingAttachment,
   } = useSelector((state) => state.attachments);
 
-  // Custom hooks for comments and attachments
+  const {
+    items: subtasks,
+    loading: subtasksLoading,
+    creating: creatingSubtask,
+  } = useSelector((state) => state.subtasks);
+
+  // Custom hooks for comments, attachments, and subtasks
   const commentsHook = useComments(taskId);
   const attachmentsHook = useAttachments(taskId);
+  const subtasksHook = useSubtasks(taskId);
 
   // Fetch data on mount
   useEffect(() => {
@@ -41,6 +50,7 @@ const TaskDetailsContainer = () => {
       console.log("Fetching data for taskId:", taskId);
       dispatch(fetchComments(taskId));
       dispatch(fetchAttachments(taskId));
+      dispatch(fetchSubtasks(taskId));
     }
   }, [dispatch, taskId]);
 
@@ -56,6 +66,7 @@ const TaskDetailsContainer = () => {
   const handleRefresh = () => {
     dispatch(fetchComments(taskId));
     dispatch(fetchAttachments(taskId));
+    dispatch(fetchSubtasks(taskId));
     toast.info("Refreshed");
   };
 
@@ -69,8 +80,12 @@ const TaskDetailsContainer = () => {
       attachments={attachments}
       attachmentsLoading={attachmentsLoading}
       uploadingAttachment={uploadingAttachment}
+      subtasks={subtasks}
+      subtasksLoading={subtasksLoading}
+      creatingSubtask={creatingSubtask}
       commentsHook={commentsHook}
       attachmentsHook={attachmentsHook}
+      subtasksHook={subtasksHook}
       onSmartAssign={handleSmartAssign}
       onRefresh={handleRefresh}
     />

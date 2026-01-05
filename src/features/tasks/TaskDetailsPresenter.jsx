@@ -1,5 +1,6 @@
 import DashboardLayout from "@/layouts/DashboardLayout";
 import BackButton from "@/components/ui/BackButton";
+import SubtasksList from "./components/SubtasksList";
 import {
   FileText,
   User,
@@ -25,8 +26,12 @@ const TaskDetailsPresenter = ({
   attachments,
   attachmentsLoading,
   uploadingAttachment,
+  subtasks,
+  subtasksLoading,
+  creatingSubtask,
   commentsHook,
   attachmentsHook,
+  subtasksHook,
   onSmartAssign,
   onRefresh,
 }) => {
@@ -238,6 +243,18 @@ const TaskDetailsPresenter = ({
               </div>
             )}
           </div>
+
+          {/* Subtasks Section */}
+          <SubtasksList
+            subtasks={subtasks}
+            loading={subtasksLoading}
+            creating={creatingSubtask}
+            subtaskTitle={subtasksHook.subtaskTitle}
+            onTitleChange={subtasksHook.setSubtaskTitle}
+            onCreateSubtask={subtasksHook.handleCreateSubtask}
+            onStatusChange={subtasksHook.handleUpdateSubtask}
+            onDelete={subtasksHook.handleDeleteSubtask}
+          />
         </div>
 
         {/* Sidebar */}

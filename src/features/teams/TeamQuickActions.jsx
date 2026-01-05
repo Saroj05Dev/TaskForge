@@ -43,7 +43,44 @@ const TeamQuickActions = () => {
   }
 
   if (!team) {
-    return <p className="text-sm text-gray-600">No team found</p>;
+    return (
+      <div className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+        <div className="flex items-center gap-2 mb-4">
+          <Users className="text-purple-600" size={20} />
+          <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+        </div>
+
+        {/* Empty State */}
+        <div className="text-center py-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <Users className="text-blue-600" size={32} />
+          </div>
+          <h4 className="text-lg font-semibold text-gray-900 mb-2">
+            No Team Yet
+          </h4>
+          <p className="text-sm text-gray-600 mb-6">
+            Create a team to start collaborating with others
+          </p>
+          <button
+            onClick={() => setOpenCreateTeam(true)}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
+          >
+            <PlusCircle size={18} />
+            Create Your First Team
+          </button>
+        </div>
+
+        {/* CREATE TEAM MODAL */}
+        <CreateTeamModal
+          open={openCreateTeam}
+          onClose={() => {
+            setOpenCreateTeam(false);
+            // Refresh to check if team was created
+            window.location.reload();
+          }}
+        />
+      </div>
+    );
   }
 
   return (

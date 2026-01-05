@@ -6,6 +6,7 @@ import activityReducer from "@/features/activity/activitySlice";
 import signupReducer from "@/features/auth/signup/signupSlice";
 import commentsReducer from "@/features/tasks/commentsSlice";
 import attachmentsReducer from "@/features/tasks/attachmentsSlice";
+import subtasksReducer from "@/features/tasks/subtasksSlice";
 
 const rootReducer = combineReducers({
   auth: loginReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   signup: signupReducer,
   comments: commentsReducer,
   attachments: attachmentsReducer,
+  subtasks: subtasksReducer,
 });
 
 export default rootReducer;
