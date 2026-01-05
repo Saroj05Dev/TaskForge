@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchComments } from "@/features/tasks/commentsSlice";
@@ -10,6 +10,7 @@ import { useComments } from "@/hooks/useComments";
 import { useAttachments } from "@/hooks/useAttachments";
 import { useSubtasks } from "@/hooks/useSubtasks";
 import TaskDetailsPresenter from "./TaskDetailsPresenter";
+import SmartAssignModal from "./components/SmartAssignModal";
 
 const TaskDetailsContainer = () => {
   const { taskId } = useParams();
@@ -44,6 +45,8 @@ const TaskDetailsContainer = () => {
   const attachmentsHook = useAttachments(taskId);
   const subtasksHook = useSubtasks(taskId);
 
+  const [openSmartAssignModal, setOpenSmartAssignModal] = useState(false);
+
   // Fetch data on mount
   useEffect(() => {
     if (taskId) {
@@ -54,13 +57,8 @@ const TaskDetailsContainer = () => {
     }
   }, [dispatch, taskId]);
 
-  const handleSmartAssign = async () => {
-    try {
-      await dispatch(smartAssignTask(taskId)).unwrap();
-      toast.success("Task assigned successfully");
-    } catch (error) {
-      toast.error(error || "Failed to assign task");
-    }
+  const handleSmartAssign = () => {
+    setOpenSmartAssignModal(true);
   };
 
   const handleRefresh = () => {
@@ -71,24 +69,32 @@ const TaskDetailsContainer = () => {
   };
 
   return (
-    <TaskDetailsPresenter
-      task={task}
-      taskId={taskId}
-      comments={comments}
-      commentsLoading={commentsLoading}
-      addingComment={addingComment}
-      attachments={attachments}
-      attachmentsLoading={attachmentsLoading}
-      uploadingAttachment={uploadingAttachment}
-      subtasks={subtasks}
-      subtasksLoading={subtasksLoading}
-      creatingSubtask={creatingSubtask}
-      commentsHook={commentsHook}
-      attachmentsHook={attachmentsHook}
-      subtasksHook={subtasksHook}
-      onSmartAssign={handleSmartAssign}
-      onRefresh={handleRefresh}
-    />
+    <>
+      <TaskDetailsPresenter
+        task={task}
+        taskId={taskId}
+        comments={comments}
+        commentsLoading={commentsLoading}
+        addingComment={addingComment}
+        attachments={attachments}
+        attachmentsLoading={attachmentsLoading}
+        uploadingAttachment={uploadingAttachment}
+        subtasks={subtasks}
+        subtasksLoading={subtasksLoading}
+        creatingSubtask={creatingSubtask}
+        commentsHook={commentsHook}
+        attachmentsHook={attachmentsHook}
+        subtasksHook={subtasksHook}
+        onSmartAssign={handleSmartAssign}
+        onRefresh={handleRefresh}
+      />
+
+      <SmartAssignModal
+        open={openSmartAssignModal}
+        onClose={() => setOpenSmartAssignModal(false)}
+        task={task}
+      />
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTasks } from "@/hooks/useTasks";
 import { fetchActivities } from "@/features/activity/activitySlice";
 
@@ -149,12 +149,12 @@ const TaskOverview = () => {
       )}
 
       {/* Show All Button */}
-      <button
-        onClick={() => navigate("/activity")}
-        className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline transition-all duration-150"
+      <Link
+        to="/tasks"
+        className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 transition-all duration-150"
       >
-        Show all actions →
-      </button>
+        View All Tasks →
+      </Link>
     </div>
   );
 };

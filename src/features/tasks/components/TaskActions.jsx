@@ -1,10 +1,13 @@
-import { useDispatch } from "react-redux";
-import { smartAssignTask } from "../taskSlice";
 import { Sparkles, Edit2, Trash2, Share2 } from "lucide-react";
 
-const TaskActions = ({ task, onEdit, onDelete, onShare, disabled }) => {
-  const dispatch = useDispatch();
-
+const TaskActions = ({
+  task,
+  onEdit,
+  onDelete,
+  onShare,
+  onSmartAssign,
+  disabled,
+}) => {
   const handleEdit = (e) => {
     e.stopPropagation();
     onEdit(task);
@@ -22,15 +25,19 @@ const TaskActions = ({ task, onEdit, onDelete, onShare, disabled }) => {
     }
   };
 
+  const handleSmartAssign = (e) => {
+    e.stopPropagation();
+    if (onSmartAssign) {
+      onSmartAssign(task);
+    }
+  };
+
   return (
     <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
       {/* SMART ASSIGN */}
       <button
         disabled={disabled}
-        onClick={(e) => {
-          e.stopPropagation();
-          dispatch(smartAssignTask(task._id));
-        }}
+        onClick={handleSmartAssign}
         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Sparkles size={14} />

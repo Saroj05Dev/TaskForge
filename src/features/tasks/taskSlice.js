@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  assignTaskApi,
+  smartAssignTaskApi,
   createTaskApi,
   deleteTaskApi,
   fetchTasksApi,
@@ -34,7 +34,8 @@ export const updateTask = createAsyncThunk(
       const response = await updateTaskApi(taskId, data);
       return response.data.data;
     } catch (error) {
-      return rejectWithValue("Failed to update task");
+      const message = error.response?.data?.message || "Failed to update task";
+      return rejectWithValue(message);
     }
   }
 );
@@ -70,19 +71,21 @@ export const deleteTask = createAsyncThunk(
       await deleteTaskApi(taskId);
       return taskId;
     } catch (error) {
-      return rejectWithValue("Failed to delete task");
+      const message = error.response?.data?.message || "Failed to delete task";
+      return rejectWithValue(message);
     }
   }
 );
 
 export const smartAssignTask = createAsyncThunk(
   "tasks/smartAssign",
-  async (taskId, { rejectWithValue }) => {
+  async ({ taskId, teamId }, { rejectWithValue }) => {
     try {
-      const res = await assignTaskApi(taskId);
+      const res = await smartAssignTaskApi(taskId, teamId);
       return res.data.data; // updated task
     } catch (error) {
-      return rejectWithValue("Failed to assign task");
+      const message = error.response?.data?.message || "Failed to assign task";
+      return rejectWithValue(message);
     }
   }
 );
@@ -103,6 +106,9 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
     // Optimistic update for drag & drop
     updateTaskStatus(state, action) {
       const { id, status } = action.payload;
@@ -148,6 +154,7 @@ const taskSlice = createSlice({
       })
       .addCase(updateTask.pending, (state) => {
         state.saving = true;
+        state.error = null;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         const index = state.items.findIndex(
@@ -158,12 +165,21 @@ const taskSlice = createSlice({
         }
         state.saving = false;
       })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.saving = false;
+        state.error = action.payload;
+      })
       .addCase(deleteTask.pending, (state) => {
         state.saving = true;
+        state.error = null;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.items = state.items.filter((t) => t._id !== action.payload);
         state.saving = false;
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.saving = false;
+        state.error = action.payload;
       })
 
       .addCase(smartAssignTask.fulfilled, (state, action) => {
@@ -193,5 +209,5 @@ const taskSlice = createSlice({
   },
 });
 
-export const { updateTaskStatus } = taskSlice.actions;
+export const { updateTaskStatus, clearError } = taskSlice.actions;
 export default taskSlice.reducer;

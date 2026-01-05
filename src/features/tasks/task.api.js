@@ -9,8 +9,8 @@ export const fetchTasksApi = () => {
 export const deleteTaskApi = (taskId) =>
   axiosInstance.delete(`/tasks/${taskId}`);
 
-export const assignTaskApi = (taskId) =>
-  axiosInstance.put(`/tasks/${taskId}/smart-assign`);
+export const smartAssignTaskApi = (taskId, teamId) =>
+  axiosInstance.put(`/tasks/${taskId}/smart-assign`, { teamId });
 
 export const fetchTaskByIdApi = (taskId) =>
   axiosInstance.get(`/tasks/${taskId}`);

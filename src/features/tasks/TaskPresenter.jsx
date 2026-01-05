@@ -3,6 +3,7 @@ import Loader from "@/components/ui/Loader";
 import TaskFormModal from "./components/TaskFormModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import ShareTaskModal from "@/features/teams/components/ShareTaskModal";
+import SmartAssignModal from "./components/SmartAssignModal";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import SearchBar from "./components/SearchBar";
 import FilterDropdowns from "./components/FilterDropdowns";
@@ -17,6 +18,7 @@ const TaskPresenter = ({
   onEdit,
   onDelete,
   onShare,
+  onSmartAssign,
 
   openFormModal,
   closeFormModal,
@@ -26,6 +28,9 @@ const TaskPresenter = ({
 
   openShareModal,
   closeShareModal,
+
+  openSmartAssignModal,
+  closeSmartAssignModal,
 
   selectedTask,
   onCreate,
@@ -93,6 +98,7 @@ const TaskPresenter = ({
         onEdit={onEdit}
         onDelete={onDelete}
         onShare={onShare}
+        onSmartAssign={onSmartAssign}
       />
 
       {/* CREATE / EDIT MODAL */}
@@ -116,6 +122,13 @@ const TaskPresenter = ({
       <ShareTaskModal
         open={openShareModal}
         onClose={closeShareModal}
+        task={selectedTask}
+      />
+
+      {/* SMART ASSIGN MODAL */}
+      <SmartAssignModal
+        open={openSmartAssignModal}
+        onClose={closeSmartAssignModal}
         task={selectedTask}
       />
     </DashboardLayout>
