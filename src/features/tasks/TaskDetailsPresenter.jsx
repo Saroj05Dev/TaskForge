@@ -1,6 +1,7 @@
 import DashboardLayout from "@/layouts/DashboardLayout";
 import BackButton from "@/components/ui/BackButton";
 import SubtasksList from "./components/SubtasksList";
+import SharedTeamsSection from "@/features/teams/components/SharedTeamsSection";
 import {
   FileText,
   User,
@@ -363,6 +364,9 @@ const TaskDetailsPresenter = ({
               </div>
             )}
           </div>
+
+          {/* Shared Teams Section */}
+          <SharedTeamsSection taskId={taskId} />
         </div>
       </div>
     </DashboardLayout>

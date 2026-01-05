@@ -20,6 +20,7 @@ const TaskContainer = () => {
 
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openShareModal, setOpenShareModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
@@ -52,6 +53,16 @@ const TaskContainer = () => {
     setOpenDeleteModal(false);
   };
 
+  const handleShare = (task) => {
+    setSelectedTask(task);
+    setOpenShareModal(true);
+  };
+
+  const closeShareModal = () => {
+    setOpenShareModal(false);
+    setSelectedTask(null);
+  };
+
   return (
     <TaskPresenter
       tasks={tasks}
@@ -60,10 +71,13 @@ const TaskContainer = () => {
       onAdd={handleAdd}
       onEdit={handleEdit}
       onDelete={handleDelete}
+      onShare={handleShare}
       openFormModal={openFormModal}
       closeFormModal={closeFormModal}
       openDeleteModal={openDeleteModal}
       closeDeleteModal={closeDeleteModal}
+      openShareModal={openShareModal}
+      closeShareModal={closeShareModal}
       selectedTask={selectedTask}
       onCreate={handleCreate}
       onUpdate={handleUpdate}

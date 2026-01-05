@@ -7,6 +7,8 @@ import signupReducer from "@/features/auth/signup/signupSlice";
 import commentsReducer from "@/features/tasks/commentsSlice";
 import attachmentsReducer from "@/features/tasks/attachmentsSlice";
 import subtasksReducer from "@/features/tasks/subtasksSlice";
+import teamsReducer from "@/features/teams/teamsSlice";
+import sharedTasksReducer from "@/features/teams/sharedTasksSlice";
 
 const rootReducer = combineReducers({
   auth: loginReducer,
@@ -16,6 +18,8 @@ const rootReducer = combineReducers({
   comments: commentsReducer,
   attachments: attachmentsReducer,
   subtasks: subtasksReducer,
+  teams: teamsReducer,
+  sharedTasks: sharedTasksReducer,
 });
 
 export default rootReducer;

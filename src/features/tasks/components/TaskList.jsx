@@ -1,7 +1,7 @@
 import TaskCard from "./TaskCard";
 import { FolderOpen } from "lucide-react";
 
-const TaskList = ({ tasks, onEdit, onDelete, saving }) => {
+const TaskList = ({ tasks, onEdit, onDelete, onShare }) => {
   if (!tasks || tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 bg-white rounded-xl border border-gray-200">
@@ -27,7 +27,7 @@ const TaskList = ({ tasks, onEdit, onDelete, saving }) => {
           task={task}
           onEdit={onEdit}
           onDelete={onDelete}
-          saving={saving}
+          onShare={onShare}
         />
       ))}
     </div>

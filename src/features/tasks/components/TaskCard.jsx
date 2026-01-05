@@ -56,7 +56,7 @@ const getStatusConfig = (status) => {
   }
 };
 
-const TaskCard = ({ task, onEdit, onDelete, saving }) => {
+const TaskCard = ({ task, onEdit, onDelete, onShare }) => {
   const navigate = useNavigate();
   const priorityConfig = getPriorityConfig(task.priority);
   const statusConfig = getStatusConfig(task.status);
@@ -117,7 +117,7 @@ const TaskCard = ({ task, onEdit, onDelete, saving }) => {
         task={task}
         onEdit={onEdit}
         onDelete={onDelete}
-        disabled={saving}
+        onShare={onShare}
       />
     </div>
   );

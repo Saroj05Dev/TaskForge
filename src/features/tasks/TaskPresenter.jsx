@@ -2,6 +2,7 @@ import TaskList from "./components/TaskList";
 import Loader from "@/components/ui/Loader";
 import TaskFormModal from "./components/TaskFormModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
+import ShareTaskModal from "@/features/teams/components/ShareTaskModal";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import SearchBar from "./components/SearchBar";
 import FilterDropdowns from "./components/FilterDropdowns";
@@ -15,12 +16,16 @@ const TaskPresenter = ({
   onAdd,
   onEdit,
   onDelete,
+  onShare,
 
   openFormModal,
   closeFormModal,
 
   openDeleteModal,
   closeDeleteModal,
+
+  openShareModal,
+  closeShareModal,
 
   selectedTask,
   onCreate,
@@ -83,7 +88,12 @@ const TaskPresenter = ({
       </div>
 
       {/* Task List */}
-      <TaskList tasks={tasks} onEdit={onEdit} onDelete={onDelete} />
+      <TaskList
+        tasks={tasks}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onShare={onShare}
+      />
 
       {/* CREATE / EDIT MODAL */}
       <TaskFormModal
@@ -100,6 +110,13 @@ const TaskPresenter = ({
         onClose={closeDeleteModal}
         onConfirm={onConfirmDelete}
         taskTitle={selectedTask?.title}
+      />
+
+      {/* SHARE TASK MODAL */}
+      <ShareTaskModal
+        open={openShareModal}
+        onClose={closeShareModal}
+        task={selectedTask}
       />
     </DashboardLayout>
   );
