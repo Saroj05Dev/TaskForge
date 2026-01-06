@@ -22,3 +22,10 @@ export const updateTaskApi = (taskId, data) => {
 export const searchTasksApi = (params) => {
   return axiosInstance.get("/tasks/search", { params });
 };
+
+export const resolveConflictApi = (taskId, resolutionType, taskData) => {
+  return axiosInstance.post(`/tasks/${taskId}/resolve-conflict`, {
+    resolutionType,
+    task: taskData,
+  });
+};

@@ -11,6 +11,7 @@ import { useAttachments } from "@/hooks/useAttachments";
 import { useSubtasks } from "@/hooks/useSubtasks";
 import TaskDetailsPresenter from "./TaskDetailsPresenter";
 import SmartAssignModal from "./components/SmartAssignModal";
+import ConflictResolutionModal from "./components/ConflictResolutionModal";
 
 const TaskDetailsContainer = () => {
   const { taskId } = useParams();
@@ -94,6 +95,8 @@ const TaskDetailsContainer = () => {
         onClose={() => setOpenSmartAssignModal(false)}
         task={task}
       />
+
+      <ConflictResolutionModal />
     </>
   );
 };

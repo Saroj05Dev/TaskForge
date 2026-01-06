@@ -6,6 +6,7 @@ import {
   fetchTasksApi,
   updateTaskApi,
   searchTasksApi,
+  resolveConflictApi,
 } from "./task.api";
 
 const initialState = {
@@ -13,6 +14,12 @@ const initialState = {
   loading: false,
   saving: false,
   error: null,
+  conflictData: {
+    taskId: null,
+    serverVersion: null,
+    localChanges: null,
+    isOpen: false,
+  },
 };
 
 export const createTask = createAsyncThunk(
@@ -29,11 +36,30 @@ export const createTask = createAsyncThunk(
 
 export const updateTask = createAsyncThunk(
   "tasks/update",
-  async ({ taskId, data }, { rejectWithValue }) => {
+  async ({ taskId, data }, { rejectWithValue, dispatch }) => {
     try {
       const response = await updateTaskApi(taskId, data);
       return response.data.data;
     } catch (error) {
+      // Check if it's a 409 conflict error
+      if (error.response?.status === 409) {
+        const serverVersion = error.response.data.data;
+
+        // Dispatch conflict data to show modal
+        dispatch({
+          type: "tasks/setConflictData",
+          payload: {
+            taskId,
+            serverVersion,
+            localChanges: data,
+          },
+        });
+
+        return rejectWithValue(
+          error.response.data.message || "Conflict detected"
+        );
+      }
+
       const message = error.response?.data?.message || "Failed to update task";
       return rejectWithValue(message);
     }
@@ -90,6 +116,24 @@ export const smartAssignTask = createAsyncThunk(
   }
 );
 
+export const resolveConflict = createAsyncThunk(
+  "tasks/resolveConflict",
+  async ({ taskId, resolutionType, taskData }, { rejectWithValue }) => {
+    try {
+      const response = await resolveConflictApi(
+        taskId,
+        resolutionType,
+        taskData
+      );
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to resolve conflict";
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const persistTaskStatus = createAsyncThunk(
   "tasks/persistStatus",
   async ({ id, status }, { rejectWithValue }) => {
@@ -117,6 +161,21 @@ const taskSlice = createSlice({
         task.previousStatus = task.status;
         task.status = status;
       }
+    },
+    // Conflict management
+    setConflictData(state, action) {
+      state.conflictData = {
+        ...action.payload,
+        isOpen: true,
+      };
+    },
+    clearConflictData(state) {
+      state.conflictData = {
+        taskId: null,
+        serverVersion: null,
+        localChanges: null,
+        isOpen: false,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -190,6 +249,30 @@ const taskSlice = createSlice({
         }
       })
 
+      /* ---------- RESOLVE CONFLICT ---------- */
+      .addCase(resolveConflict.pending, (state) => {
+        state.saving = true;
+      })
+      .addCase(resolveConflict.fulfilled, (state, action) => {
+        const updatedTask = action.payload;
+        const index = state.items.findIndex((t) => t._id === updatedTask._id);
+        if (index !== -1) {
+          state.items[index] = updatedTask;
+        }
+        state.saving = false;
+        // Clear conflict data
+        state.conflictData = {
+          taskId: null,
+          serverVersion: null,
+          localChanges: null,
+          isOpen: false,
+        };
+      })
+      .addCase(resolveConflict.rejected, (state, action) => {
+        state.saving = false;
+        state.error = action.payload;
+      })
+
       /* ---------- PERSIST STATUS ---------- */
       .addCase(persistTaskStatus.fulfilled, (state, action) => {
         const updatedTask = action.payload;
@@ -214,5 +297,10 @@ const taskSlice = createSlice({
   },
 });
 
-export const { updateTaskStatus, clearError } = taskSlice.actions;
+export const {
+  updateTaskStatus,
+  clearError,
+  setConflictData,
+  clearConflictData,
+} = taskSlice.actions;
 export default taskSlice.reducer;

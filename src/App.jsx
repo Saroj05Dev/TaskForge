@@ -20,8 +20,22 @@ const App = () => {
       dispatch(prependActivity(activity));
     });
 
+    // Listen for task conflicts
+    socket.on("taskConflict", ({ taskId, serverVersion, message }) => {
+      console.log("Conflict detected:", message);
+      // Conflict modal will be shown via 409 response
+    });
+
+    // Listen for task updates
+    socket.on("taskUpdated", (updatedTask) => {
+      console.log("Task updated:", updatedTask);
+      // Task will be updated in Redux via normal flow
+    });
+
     return () => {
       socket.off("actionLogged");
+      socket.off("taskConflict");
+      socket.off("taskUpdated");
       socket.disconnect();
     };
   }, [dispatch]);

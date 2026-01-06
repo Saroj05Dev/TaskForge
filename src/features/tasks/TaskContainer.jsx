@@ -10,6 +10,7 @@ import {
 } from "./taskSlice";
 import { useTaskSearch } from "@/hooks/useTaskSearch";
 import { useToast } from "@/contexts/ToastContext";
+import ConflictResolutionModal from "./components/ConflictResolutionModal";
 
 const TaskContainer = () => {
   const dispatch = useDispatch();
@@ -72,12 +73,30 @@ const TaskContainer = () => {
 
   const handleUpdate = async (data) => {
     try {
-      await dispatch(updateTask({ taskId: selectedTask._id, data })).unwrap();
+      // Include version for conflict detection
+      const updatePayload = {
+        ...data,
+        version: selectedTask?.version || 0,
+        lastModified: selectedTask?.lastModified,
+      };
+
+      console.log("Updating task with version:", updatePayload.version);
+
+      await dispatch(
+        updateTask({ taskId: selectedTask._id, data: updatePayload })
+      ).unwrap();
       closeFormModal();
       toast.success("Task updated successfully");
     } catch (error) {
-      // Error toast will be shown by the useEffect watching the error state
-      closeFormModal();
+      // Check if it's a conflict error
+      if (error?.isConflict) {
+        console.log("Conflict detected!", error);
+        // Modal will be shown automatically via Redux state
+        closeFormModal();
+      } else {
+        closeFormModal();
+        toast.error(error?.message || "Failed to update task");
+      }
     }
   };
 
@@ -108,35 +127,39 @@ const TaskContainer = () => {
   };
 
   return (
-    <TaskPresenter
-      tasks={tasks}
-      loading={loading}
-      saving={saving}
-      onAdd={handleAdd}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-      onShare={handleShare}
-      onSmartAssign={handleSmartAssign}
-      openFormModal={openFormModal}
-      closeFormModal={closeFormModal}
-      openDeleteModal={openDeleteModal}
-      closeDeleteModal={closeDeleteModal}
-      openShareModal={openShareModal}
-      closeShareModal={closeShareModal}
-      openSmartAssignModal={openSmartAssignModal}
-      closeSmartAssignModal={() => setOpenSmartAssignModal(false)}
-      selectedTask={selectedTask}
-      onCreate={handleCreate}
-      onUpdate={handleUpdate}
-      onConfirmDelete={handleConfirmDelete}
-      // Search and filter props
-      searchText={searchText}
-      onSearchChange={setSearchText}
-      onSearchClear={clearSearch}
-      filters={filters}
-      onFilterChange={handleFilterChange}
-      onFiltersClear={clearFilters}
-    />
+    <>
+      <TaskPresenter
+        tasks={tasks}
+        loading={loading}
+        saving={saving}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onShare={handleShare}
+        onSmartAssign={handleSmartAssign}
+        openFormModal={openFormModal}
+        closeFormModal={closeFormModal}
+        openDeleteModal={openDeleteModal}
+        closeDeleteModal={closeDeleteModal}
+        openShareModal={openShareModal}
+        closeShareModal={closeShareModal}
+        openSmartAssignModal={openSmartAssignModal}
+        closeSmartAssignModal={() => setOpenSmartAssignModal(false)}
+        selectedTask={selectedTask}
+        onCreate={handleCreate}
+        onUpdate={handleUpdate}
+        onConfirmDelete={handleConfirmDelete}
+        // Search and filter props
+        searchText={searchText}
+        onSearchChange={setSearchText}
+        onSearchClear={clearSearch}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onFiltersClear={clearFilters}
+      />
+
+      <ConflictResolutionModal />
+    </>
   );
 };
 
