@@ -7,6 +7,8 @@ import TeamSelector from "@/features/teams/components/TeamSelector";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchTasks } from "../features/tasks/taskSlice";
+import { fetchAllTeams } from "../features/teams/teamsSlice";
+import { fetchActivities } from "../features/activity/activitySlice";
 import { useTeams } from "@/hooks/useTeams";
 import { RefreshCw } from "lucide-react";
 
@@ -21,6 +23,8 @@ const Dashboard = () => {
 
   const handleRefresh = () => {
     dispatch(fetchTasks());
+    dispatch(fetchAllTeams());
+    dispatch(fetchActivities());
   };
 
   return (
