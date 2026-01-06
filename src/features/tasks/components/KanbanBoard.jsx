@@ -1,23 +1,39 @@
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useTasks } from "@/hooks/useTasks";
+import { useTeams } from "@/hooks/useTeams";
 import {
   updateTaskStatus,
   persistTaskStatus,
 } from "@/features/tasks/taskSlice";
 import KanbanColumn from "./KanbanColumns";
+import { canEditTask } from "@/utils/taskPermissions";
 
 const KanbanBoard = () => {
   const dispatch = useDispatch();
   const { tasks } = useTasks();
+  const { teams } = useTeams();
+  const authUser = useSelector((state) => state.auth.user);
+  const currentUserId = authUser?.id || authUser?._id;
+
+  // Get list of team IDs the user belongs to
+  const userTeamIds = teams.map((team) => team._id);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 },
     })
   );
+
+  // Filter tasks to only show those with edit or full access
+  // View-only tasks should not appear in Kanban since they can't be dragged
+  const editableTasks = tasks.filter((task) =>
+    canEditTask(task, currentUserId, userTeamIds)
+  );
+
+  console.log("Editable tasks count:", editableTasks.length);
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -44,17 +60,17 @@ const KanbanBoard = () => {
         <KanbanColumn
           id="Todo"
           title="Todo"
-          tasks={tasks.filter((t) => t.status === "Todo")}
+          tasks={editableTasks.filter((t) => t.status === "Todo")}
         />
         <KanbanColumn
           id="In Progress"
           title="In Progress"
-          tasks={tasks.filter((t) => t.status === "In Progress")}
+          tasks={editableTasks.filter((t) => t.status === "In Progress")}
         />
         <KanbanColumn
           id="Done"
           title="Done"
-          tasks={tasks.filter((t) => t.status === "Done")}
+          tasks={editableTasks.filter((t) => t.status === "Done")}
         />
       </div>
     </DndContext>

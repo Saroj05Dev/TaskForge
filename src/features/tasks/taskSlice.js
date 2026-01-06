@@ -195,7 +195,12 @@ const taskSlice = createSlice({
         const updatedTask = action.payload;
         const index = state.items.findIndex((t) => t._id === updatedTask._id);
         if (index !== -1) {
-          state.items[index] = updatedTask;
+          // Preserve sharedWith field if backend doesn't return it
+          const originalTask = state.items[index];
+          state.items[index] = {
+            ...updatedTask,
+            sharedWith: updatedTask.sharedWith || originalTask.sharedWith,
+          };
         }
       })
       .addCase(persistTaskStatus.rejected, (state, action) => {
