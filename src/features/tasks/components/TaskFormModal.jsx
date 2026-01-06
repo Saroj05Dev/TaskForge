@@ -9,11 +9,8 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
     description: "",
     priority: "Medium",
     status: "Todo",
-    assignedUser: "",
+    assigneeEmail: "",
   });
-
-  const [members, setMembers] = useState([]);
-  const [loadingMembers, setLoadingMembers] = useState(false);
 
   /* Populate form when editing */
   useEffect(() => {
@@ -23,7 +20,7 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
         description: initialData.description || "",
         priority: initialData.priority || "Medium",
         status: initialData.status || "Todo",
-        assignedUser: initialData.assignedUser?._id || "",
+        assigneeEmail: initialData.assignedUser?.email || "",
       });
     } else {
       setForm({
@@ -31,29 +28,10 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
         description: "",
         priority: "Medium",
         status: "Todo",
-        assignedUser: "",
+        assigneeEmail: "",
       });
     }
   }, [initialData, open]);
-
-  /* Fetch team members */
-  useEffect(() => {
-    if (!open) return;
-
-    const fetchMembers = async () => {
-      try {
-        setLoadingMembers(true);
-        const res = await axiosInstance.get("/teams/my");
-        setMembers(res.data.data.members || []);
-      } catch (err) {
-        console.error("Failed to fetch team members", err);
-      } finally {
-        setLoadingMembers(false);
-      }
-    };
-
-    fetchMembers();
-  }, [open]);
 
   const handleChange = (e) => {
     setForm({
@@ -193,27 +171,18 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
               Assign To
             </div>
           </label>
-          <select
-            id="assignedUser"
-            name="assignedUser"
-            value={form.assignedUser}
+          <input
+            id="assigneeEmail"
+            name="assigneeEmail"
+            type="email"
+            placeholder="user@example.com or leave empty"
+            value={form.assigneeEmail}
             onChange={handleChange}
-            disabled={loadingMembers}
-            className="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <option value="">Unassigned</option>
-
-            {members.map((member) => (
-              <option key={member._id} value={member._id}>
-                {member.fullName}
-              </option>
-            ))}
-          </select>
-          {loadingMembers && (
-            <p className="mt-1 text-xs text-gray-500">
-              Loading team members...
-            </p>
-          )}
+            className="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Leave empty to keep task unassigned
+          </p>
         </div>
       </div>
 
