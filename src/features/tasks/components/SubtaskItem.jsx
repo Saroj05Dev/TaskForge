@@ -78,7 +78,8 @@ const SubtaskItem = ({ subtask, onStatusChange, onDelete }) => {
       {/* Delete Button */}
       <button
         onClick={() => onDelete(subtask._id)}
-        className="opacity-0 group-hover:opacity-100 p-1.5 text-red-600 hover:bg-red-50 rounded transition-all"
+        className="sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-red-600 hover:bg-red-50 rounded transition-all"
+        title="Delete subtask"
       >
         <Trash2 size={16} />
       </button>

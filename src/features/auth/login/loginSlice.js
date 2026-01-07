@@ -1,9 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  loginApi,
-  getCurrentUserApi,
-  logoutApi,
-} from "./login.api";
+import { loginApi, getCurrentUserApi, logoutApi } from "./login.api";
 import { signupUser } from "../signup/signupSlice";
 
 export const loginUser = createAsyncThunk(
@@ -13,9 +9,7 @@ export const loginUser = createAsyncThunk(
       const response = await loginApi(credentials);
       return response.data.data.userData;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Login failed"
-      );
+      return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
 );
@@ -38,12 +32,9 @@ export const restoreSession = createAsyncThunk(
 /**
  * LOGOUT
  */
-export const logoutUser = createAsyncThunk(
-  "auth/logout",
-  async () => {
-    await logoutApi();
-  }
-);
+export const logoutUser = createAsyncThunk("auth/logout", async () => {
+  await logoutApi();
+});
 
 const initialState = {
   user: null,
@@ -78,11 +69,16 @@ const loginSlice = createSlice({
         state.isAuthenticated = true;
       })
       // RESTORE SESSION
+      .addCase(restoreSession.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(restoreSession.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
       })
       .addCase(restoreSession.rejected, (state) => {
+        state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
       })
