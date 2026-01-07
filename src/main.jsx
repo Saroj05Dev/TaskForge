@@ -5,7 +5,6 @@ import App from "@/App";
 import { Provider } from "react-redux";
 import store from "@/store/store";
 import { ToastProvider } from "@/contexts/ToastContext";
-import AppBootstrap from "@/app/AppBootstrap";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
