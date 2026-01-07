@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import store from "@/store/store";
 import TaskPresenter from "./TaskPresenter";
 import {
   fetchTasks,
@@ -98,14 +99,14 @@ const TaskContainer = () => {
       closeFormModal();
       toast.success("Task updated successfully");
     } catch (error) {
-      // Check if it's a conflict error
-      if (error?.isConflict) {
-        console.log("Conflict detected!", error);
-        // Modal will be shown automatically via Redux state
+      // Check if conflict modal was opened (via Redux state)
+      const state = store.getState();
+      if (state.tasks.conflictData.isOpen) {
+        console.log("Conflict detected! Modal should be open");
         closeFormModal();
       } else {
         closeFormModal();
-        toast.error(error?.message || "Failed to update task");
+        toast.error(error?.message || error || "Failed to update task");
       }
     }
   };
