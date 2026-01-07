@@ -5,11 +5,16 @@ import App from "@/App";
 import { Provider } from "react-redux";
 import store from "@/store/store";
 import { ToastProvider } from "@/contexts/ToastContext";
+import AppBootstrap from "@/app/AppBootstrap";
 
 createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <ToastProvider>
-      <App />
-    </ToastProvider>
-  </Provider>
+  <StrictMode>
+    <Provider store={store}>
+      <ToastProvider>
+        <AppBootstrap>
+          <App />
+        </AppBootstrap>
+      </ToastProvider>
+    </Provider>
+  </StrictMode>
 );
