@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     socket.connect();
 
-    // ========== TASK EVENTS ==========
+    // TASK EVENTS
     socket.on("taskCreated", (task) => {
       console.log("Task created:", task.title);
       dispatch(fetchTasks()); // Refresh task list
@@ -46,7 +46,7 @@ const App = () => {
       // Conflict modal will be shown via 409 response
     });
 
-    // ========== TEAM EVENTS ==========
+    // TEAM EVENTS
     socket.on("teamCreated", (team) => {
       console.log("Team created:", team.name);
       dispatch(fetchAllTeams()); // Refresh teams
@@ -72,7 +72,7 @@ const App = () => {
       dispatch(fetchAllTeams()); // Refresh teams
     });
 
-    // ========== TASK SHARING EVENTS ==========
+    // TASK SHARING EVENTS
     socket.on("taskShared", ({ taskId, teamId }) => {
       console.log("Task shared:", taskId, "with team:", teamId);
       dispatch(fetchTasks()); // Refresh tasks
@@ -83,7 +83,7 @@ const App = () => {
       dispatch(fetchTasks()); // Refresh tasks
     });
 
-    // ========== ACTIVITY LOG ==========
+    // ACTIVITY LOG
     socket.on("actionLogged", (activity) => {
       dispatch(prependActivity(activity));
     });
