@@ -7,7 +7,6 @@ import { prependActivity } from "@/features/activity/activitySlice";
 import { fetchTasks } from "@/features/tasks/taskSlice";
 import { fetchAllTeams } from "@/features/teams/teamsSlice";
 import ServerWarmupIndicator from "@/components/ui/ServerWarmupIndicator";
-import AppLoader from "@/components/ui/AppLoader";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -108,10 +107,10 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <AppLoader>
+    <>
       <ServerWarmupIndicator />
       <AppRoutes />
-    </AppLoader>
+    </>
   );
 };
 
