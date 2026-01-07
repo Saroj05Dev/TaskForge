@@ -11,9 +11,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <ToastProvider>
-        <AppBootstrap>
-          <App />
-        </AppBootstrap>
+        <App />
       </ToastProvider>
     </Provider>
   </StrictMode>
