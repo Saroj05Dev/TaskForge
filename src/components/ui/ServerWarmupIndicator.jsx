@@ -12,9 +12,8 @@ function ServerWarmupIndicator() {
         return;
       }
 
-      let timeoutId;
-
-      timeoutId = setTimeout(() => setVisible(true), 1500);
+      // Show indicator immediately
+      setVisible(true);
 
       try {
         await axios.get(`${API_BASE_URL}/api/health`, {
@@ -25,8 +24,6 @@ function ServerWarmupIndicator() {
         console.warn("Warming up backend...");
       } finally {
         sessionStorage.setItem("serverAwake", "true");
-
-        clearTimeout(timeoutId);
         setVisible(false);
       }
     };
@@ -37,9 +34,13 @@ function ServerWarmupIndicator() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 flex items-center gap-2 rounded-md bg-white px-3 py-2 shadow-md border text-sm text-gray-600 z-50">
-      <div className="h-3 w-3 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
-      <span>Starting server… this may take a minute</span>
+    <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-blue-200 border-t-blue-600" />
+        <span className="text-sm font-medium text-blue-600">
+          Starting server… this may take a minute
+        </span>
+      </div>
     </div>
   );
 }
