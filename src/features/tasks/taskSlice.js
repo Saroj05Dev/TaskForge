@@ -168,14 +168,6 @@ const taskSlice = createSlice({
       const updatedTask = action.payload;
       const index = state.items.findIndex((t) => t._id === updatedTask._id);
       if (index !== -1) {
-        // Preserve conflict data if modal is open
-        if (
-          state.conflictData.isOpen &&
-          state.conflictData.taskId === updatedTask._id
-        ) {
-          // Don't update the task if conflict modal is open for this task
-          return;
-        }
         state.items[index] = updatedTask;
       }
     },

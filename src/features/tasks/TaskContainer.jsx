@@ -58,6 +58,8 @@ const TaskContainer = () => {
   };
 
   const handleEdit = (task) => {
+    console.log("Editing task:", task);
+    console.log("Assigned user:", task.assignedUser);
     setSelectedTask(task);
     setOpenFormModal(true);
   };
@@ -99,15 +101,17 @@ const TaskContainer = () => {
       closeFormModal();
       toast.success("Task updated successfully");
     } catch (error) {
-      // Check if conflict modal was opened (via Redux state)
-      const state = store.getState();
-      if (state.tasks.conflictData.isOpen) {
-        console.log("Conflict detected! Modal should be open");
-        closeFormModal();
-      } else {
-        closeFormModal();
-        toast.error(error?.message || error || "Failed to update task");
-      }
+      // If update failed, check if it's a conflict (modal will open via Redux)
+      // Just close the form modal and let the conflict modal show
+      closeFormModal();
+
+      // Show error toast only if it's not a conflict
+      setTimeout(() => {
+        const state = store.getState();
+        if (!state.tasks.conflictData.isOpen) {
+          toast.error(error?.message || error || "Failed to update task");
+        }
+      }, 100);
     }
   };
 
