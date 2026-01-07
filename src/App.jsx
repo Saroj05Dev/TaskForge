@@ -4,7 +4,7 @@ import AppRoutes from "@/routes";
 import { restoreSession } from "@/features/auth/login/loginSlice";
 import { socket } from "@/helpers/socket";
 import { prependActivity } from "@/features/activity/activitySlice";
-import { fetchTasks } from "@/features/tasks/taskSlice";
+import { fetchTasks, updateTaskInList } from "@/features/tasks/taskSlice";
 import { fetchAllTeams } from "@/features/teams/teamsSlice";
 import ServerWarmupIndicator from "@/components/ui/ServerWarmupIndicator";
 
@@ -27,7 +27,8 @@ const App = () => {
 
     socket.on("taskUpdated", (task) => {
       console.log("Task updated:", task.title);
-      dispatch(fetchTasks()); // Refresh task list
+      // Update only this specific task instead of fetching all
+      dispatch(updateTaskInList(task));
     });
 
     socket.on("taskDeleted", ({ taskId }) => {
