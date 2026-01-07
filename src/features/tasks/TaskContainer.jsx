@@ -58,8 +58,6 @@ const TaskContainer = () => {
   };
 
   const handleEdit = (task) => {
-    console.log("Editing task:", task);
-    console.log("Assigned user:", task.assignedUser);
     setSelectedTask(task);
     setOpenFormModal(true);
   };
@@ -74,7 +72,12 @@ const TaskContainer = () => {
 
   const handleCreate = async (data) => {
     try {
-      await dispatch(createTask(data)).unwrap();
+      await dispatch(
+        createTask({
+          ...data,
+          assigneeEmail: data.assigneeEmail, // Store email for future edits
+        })
+      ).unwrap();
       closeFormModal();
       toast.success("Task created successfully");
     } catch (error) {
@@ -91,6 +94,7 @@ const TaskContainer = () => {
         ...data,
         version: selectedTask?.version || 0,
         lastModified: selectedTask?.lastModified,
+        assigneeEmail: data.assigneeEmail, // Store email for future edits
       };
 
       console.log("Updating task with version:", updatePayload.version);

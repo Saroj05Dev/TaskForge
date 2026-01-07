@@ -15,12 +15,19 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
   /* Populate form when editing */
   useEffect(() => {
     if (initialData) {
+      // assignedUser can be either an object {_id, email, fullName} or just an ID string
+      const assigneeEmail =
+        typeof initialData.assignedUser === "object" &&
+        initialData.assignedUser?.email
+          ? initialData.assignedUser.email
+          : initialData.assigneeEmail || ""; // Fallback to assigneeEmail field if it exists
+
       setForm({
         title: initialData.title || "",
         description: initialData.description || "",
         priority: initialData.priority || "Medium",
         status: initialData.status || "Todo",
-        assigneeEmail: initialData.assignedUser?.email || "",
+        assigneeEmail: assigneeEmail,
       });
     } else {
       setForm({
