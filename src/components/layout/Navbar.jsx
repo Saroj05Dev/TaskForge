@@ -15,7 +15,7 @@ const Navbar = ({ onMenuClick }) => {
 
   return (
     <nav className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-4 md:px-6 shrink-0">
-      {/* Left: Menu Button (Mobile) + Tasks Link (Mobile) + Brand */}
+      {/* Left: Menu Button (Mobile) + Tasks Link (Mobile) + Brand (when logged in) */}
       <div className="flex items-center gap-2">
         <button
           onClick={onMenuClick}
@@ -34,12 +34,15 @@ const Navbar = ({ onMenuClick }) => {
           Tasks
         </button>
 
-        <div
-          className="text-lg font-semibold text-gray-900 cursor-pointer"
-          onClick={() => navigate("/")}
-        >
-          TaskForge
-        </div>
+        {/* Brand - Only show when logged in */}
+        {user && (
+          <div
+            className="text-base md:text-lg font-semibold text-gray-900 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            TaskForge
+          </div>
+        )}
       </div>
 
       {/* Right: User Info & Actions */}
