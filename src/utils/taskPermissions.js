@@ -3,7 +3,7 @@
  * @param {Object} task - The task object
  * @param {String} userId - Current user's ID
  * @param {Array} userTeams - Array of team IDs the user belongs to
- * @returns {String} - Permission level: 'owner', 'full', 'edit', 'view', or null
+ * @returns {String} - Permission level: 'owner', 'assignee', 'full', 'edit', 'view', or null
  */
 export const getUserTaskPermission = (task, userId, userTeams = []) => {
   if (!task || !userId) return null;
@@ -11,6 +11,11 @@ export const getUserTaskPermission = (task, userId, userTeams = []) => {
   // If user is the task creator/owner
   if (task.createdBy?._id === userId || task.createdBy === userId) {
     return "owner";
+  }
+
+  // If user is assigned to the task
+  if (task.assignedUser?._id === userId || task.assignedUser === userId) {
+    return "assignee";
   }
 
   // Check if task is shared with user's teams
@@ -42,7 +47,7 @@ export const getUserTaskPermission = (task, userId, userTeams = []) => {
  */
 export const canEditTask = (task, userId, userTeams = []) => {
   const permission = getUserTaskPermission(task, userId, userTeams);
-  return ["owner", "full", "edit"].includes(permission);
+  return ["owner", "assignee", "full", "edit"].includes(permission);
 };
 
 /**
@@ -59,6 +64,7 @@ export const canDeleteTask = (task, userId, userTeams = []) => {
 export const getPermissionName = (permission) => {
   const names = {
     owner: "Owner",
+    assignee: "Assignee",
     full: "Full Access",
     edit: "Edit Access",
     view: "View Only",

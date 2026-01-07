@@ -6,7 +6,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "@/pages/Dashboard";
 import Tasks from "@/pages/Tasks";
 import Activity from "@/pages/Activity";
-import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import NotFound from "@/pages/NotFound";
@@ -29,7 +28,6 @@ const AppRoutes = () => {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/tasks/:taskId" element={<TaskDetails />} />
           <Route path="/activity" element={<Activity />} />
-          <Route path="/settings" element={<Settings />} />
         </Route>
 
         {/* Fallback */}

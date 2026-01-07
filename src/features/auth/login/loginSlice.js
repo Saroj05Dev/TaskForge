@@ -6,9 +6,6 @@ import {
 } from "./login.api";
 import { signupUser } from "../signup/signupSlice";
 
-/**
- * LOGIN
- */
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {

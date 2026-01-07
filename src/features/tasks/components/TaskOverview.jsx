@@ -150,10 +150,10 @@ const TaskOverview = () => {
 
       {/* Show All Button */}
       <Link
-        to="/tasks"
+        to="/activity"
         className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 transition-all duration-150"
       >
-        View All Tasks →
+        View all activities →
       </Link>
     </div>
   );

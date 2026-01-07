@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   CheckSquare,
   Activity,
-  Settings,
   ChevronLeft,
   ChevronRight,
   Lightbulb,
@@ -14,7 +13,6 @@ const navItems = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Tasks", path: "/tasks", icon: CheckSquare },
   { label: "Activity Log", path: "/activity", icon: Activity },
-  { label: "Settings", path: "/settings", icon: Settings },
 ];
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {

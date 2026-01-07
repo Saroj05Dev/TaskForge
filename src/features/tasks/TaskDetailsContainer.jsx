@@ -12,6 +12,7 @@ import { useSubtasks } from "@/hooks/useSubtasks";
 import TaskDetailsPresenter from "./TaskDetailsPresenter";
 import SmartAssignModal from "./components/SmartAssignModal";
 import ConflictResolutionModal from "./components/ConflictResolutionModal";
+import { socket } from "@/helpers/socket";
 
 const TaskDetailsContainer = () => {
   const { taskId } = useParams();
@@ -57,6 +58,74 @@ const TaskDetailsContainer = () => {
       dispatch(fetchSubtasks(taskId));
     }
   }, [dispatch, taskId]);
+
+  // Socket.IO listeners for real-time updates
+  useEffect(() => {
+    if (!taskId) return;
+
+    // Comment events
+    const handleCommentAdded = (comment) => {
+      if (comment.task === taskId) {
+        dispatch(fetchComments(taskId));
+      }
+    };
+
+    const handleCommentDeleted = ({ taskId: deletedTaskId }) => {
+      if (deletedTaskId === taskId) {
+        dispatch(fetchComments(taskId));
+      }
+    };
+
+    // Attachment events
+    const handleAttachmentAdded = (attachment) => {
+      if (attachment.task === taskId) {
+        dispatch(fetchAttachments(taskId));
+      }
+    };
+
+    const handleAttachmentDeleted = ({ taskId: deletedTaskId }) => {
+      if (deletedTaskId === taskId) {
+        dispatch(fetchAttachments(taskId));
+      }
+    };
+
+    // Subtask events
+    const handleSubtaskAdded = (subtask) => {
+      if (subtask.task === taskId) {
+        dispatch(fetchSubtasks(taskId));
+      }
+    };
+
+    const handleSubtaskUpdated = (subtask) => {
+      if (subtask.task === taskId) {
+        dispatch(fetchSubtasks(taskId));
+      }
+    };
+
+    const handleSubtaskDeleted = ({ taskId: deletedTaskId }) => {
+      if (deletedTaskId === taskId) {
+        dispatch(fetchSubtasks(taskId));
+      }
+    };
+
+    socket.on("commentAdded", handleCommentAdded);
+    socket.on("commentDeleted", handleCommentDeleted);
+    socket.on("attachmentAdded", handleAttachmentAdded);
+    socket.on("attachmentDeleted", handleAttachmentDeleted);
+    socket.on("subtaskAdded", handleSubtaskAdded);
+    socket.on("subtaskUpdated", handleSubtaskUpdated);
+    socket.on("subtaskDeleted", handleSubtaskDeleted);
+
+    return () => {
+      socket.off("commentAdded", handleCommentAdded);
+      socket.off("commentDeleted", handleCommentDeleted);
+      socket.off("attachmentAdded", handleAttachmentAdded);
+      socket.off("attachmentDeleted", handleAttachmentDeleted);
+      socket.off("subtaskAdded", handleSubtaskAdded);
+      socket.off("subtaskUpdated", handleSubtaskUpdated);
+      socket.off("subtaskDeleted", handleSubtaskDeleted);
+    };
+  }, [taskId, dispatch]);
 
   const handleSmartAssign = () => {
     setOpenSmartAssignModal(true);

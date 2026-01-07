@@ -1,4 +1,4 @@
-import { Github, Twitter, Linkedin, Mail, Heart } from "lucide-react";
+import { Github, Twitter, Linkedin } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -13,11 +13,6 @@ const Footer = () => {
             <p className="text-sm text-gray-600 flex items-center gap-1">
               © {currentYear}{" "}
               <span className="font-semibold text-gray-900">TaskForge</span>
-            </p>
-            <p className="text-xs text-gray-500 hidden md:block">
-              Made with{" "}
-              <Heart size={12} className="inline text-red-500 fill-red-500" />{" "}
-              by your team
             </p>
           </div>
 
@@ -55,7 +50,7 @@ const Footer = () => {
           {/* Right: Social Icons */}
           <div className="flex items-center gap-2">
             <a
-              href="https://github.com"
+              href="https://github.com/Saroj05Dev"
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200"
@@ -64,7 +59,7 @@ const Footer = () => {
               <Github size={16} />
             </a>
             <a
-              href="https://twitter.com"
+              href="https://x.com/Saroj05Dev"
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200"
@@ -73,20 +68,13 @@ const Footer = () => {
               <Twitter size={16} />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/saroj-kumar-das-86a36b30a/"
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200"
               aria-label="LinkedIn"
             >
               <Linkedin size={16} />
-            </a>
-            <a
-              href="mailto:contact@taskforge.com"
-              className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200"
-              aria-label="Email"
-            >
-              <Mail size={16} />
             </a>
           </div>
         </div>
