@@ -29,7 +29,8 @@ export const createTask = createAsyncThunk(
       const response = await createTaskApi(data);
       return response.data.data;
     } catch (error) {
-      return rejectWithValue("Failed to create task");
+      const message = error.response?.data?.message || "Failed to create task";
+      return rejectWithValue(message);
     }
   }
 );
@@ -210,6 +211,10 @@ const taskSlice = createSlice({
       .addCase(createTask.fulfilled, (state, action) => {
         state.items.unshift(action.payload);
         state.saving = false;
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.saving = false;
+        state.error = action.payload;
       })
       .addCase(updateTask.pending, (state) => {
         state.saving = true;

@@ -69,7 +69,17 @@ const TaskContainer = () => {
   const closeFormModal = () => setOpenFormModal(false);
   const closeDeleteModal = () => setOpenDeleteModal(false);
 
-  const handleCreate = (data) => dispatch(createTask(data));
+  const handleCreate = async (data) => {
+    try {
+      await dispatch(createTask(data)).unwrap();
+      closeFormModal();
+      toast.success("Task created successfully");
+    } catch (error) {
+      // Error toast will be shown by the useEffect watching the error state
+      // But we keep the modal open so user can fix the issue
+      console.error("Failed to create task:", error);
+    }
+  };
 
   const handleUpdate = async (data) => {
     try {
