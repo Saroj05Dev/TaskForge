@@ -7,6 +7,7 @@ import {
   getTaskDiff,
   formatConflictMessage,
   formatFieldName,
+  formatFieldValue,
 } from "@/utils/conflictUtils";
 import { AlertTriangle, Check, GitMerge, RefreshCw } from "lucide-react";
 
@@ -68,7 +69,7 @@ const ConflictResolutionModal = () => {
           Changes Comparison
         </h3>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Server Version */}
           <div className="border border-gray-200 rounded-lg p-4 bg-blue-50">
             <h4 className="text-xs font-semibold text-blue-900 mb-2 flex items-center gap-1">
@@ -81,8 +82,8 @@ const ConflictResolutionModal = () => {
                   <span className="font-medium text-gray-700">
                     {formatFieldName(key)}:
                   </span>
-                  <p className="text-gray-900 mt-0.5 p-2 bg-white rounded border border-blue-200">
-                    {JSON.stringify(value.server)}
+                  <p className="text-gray-900 mt-0.5 p-2 bg-white rounded border border-blue-200 break-words">
+                    {formatFieldValue(key, value.server)}
                   </p>
                 </div>
               ))}
@@ -101,8 +102,8 @@ const ConflictResolutionModal = () => {
                   <span className="font-medium text-gray-700">
                     {formatFieldName(key)}:
                   </span>
-                  <p className="text-gray-900 mt-0.5 p-2 bg-white rounded border border-green-200">
-                    {JSON.stringify(value.local)}
+                  <p className="text-gray-900 mt-0.5 p-2 bg-white rounded border border-green-200 break-words">
+                    {formatFieldValue(key, value.local)}
                   </p>
                 </div>
               ))}

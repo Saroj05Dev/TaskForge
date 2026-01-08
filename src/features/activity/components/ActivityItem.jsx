@@ -28,12 +28,13 @@ const ActivityItem = ({ activity }) => {
           <span className="text-gray-600">
             {formatActionType(activity.actionType)}
           </span>
-          {activity.task && (
+          {/* Show task title if available from either task object or taskTitle field */}
+          {(activity.task?.title || activity.taskTitle) && (
             <>
               {" "}
               <span className="text-gray-600">on</span>{" "}
               <span className="font-medium text-gray-900">
-                "{activity.task.title}"
+                "{activity.task?.title || activity.taskTitle}"
               </span>
             </>
           )}

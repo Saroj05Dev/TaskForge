@@ -65,7 +65,11 @@ export const mergeTaskData = (serverVersion, localChanges) => {
 export const formatConflictMessage = (serverVersion) => {
   const userName = serverVersion?.updatedBy?.fullName || "Another user";
   const timestamp = serverVersion?.lastModified
-    ? new Date(serverVersion.lastModified).toLocaleString()
+    ? new Date(serverVersion.lastModified).toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
     : "recently";
 
   return `This task was modified by ${userName} at ${timestamp}`;
@@ -94,4 +98,49 @@ export const formatFieldName = (fieldName) => {
     .replace(/([A-Z])/g, " $1")
     .replace(/^./, (str) => str.toUpperCase())
     .trim();
+};
+
+/**
+ * Format field value for display
+ * @param {string} fieldName - Field name
+ * @param {any} value - Field value
+ * @returns {string} Formatted value
+ */
+export const formatFieldValue = (fieldName, value) => {
+  // Handle null/undefined
+  if (value === null || value === undefined) {
+    return "Not set";
+  }
+
+  // Handle assignedUser - show name or "Unassigned"
+  if (fieldName === "assignedUser") {
+    if (typeof value === "object" && value?.fullName) {
+      return value.fullName;
+    }
+    if (typeof value === "object" && value?.email) {
+      return value.email;
+    }
+    return "Unassigned";
+  }
+
+  // Handle lastModified - format to IST
+  if (fieldName === "lastModified") {
+    try {
+      return new Date(value).toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        dateStyle: "short",
+        timeStyle: "short",
+      });
+    } catch {
+      return value;
+    }
+  }
+
+  // Handle objects - stringify nicely
+  if (typeof value === "object") {
+    return JSON.stringify(value, null, 2);
+  }
+
+  // Return as string
+  return String(value);
 };
