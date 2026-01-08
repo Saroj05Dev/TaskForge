@@ -33,8 +33,6 @@ const KanbanBoard = () => {
     canEditTask(task, currentUserId, userTeamIds)
   );
 
-  console.log("Editable tasks count:", editableTasks.length);
-
   const handleDragEnd = (event) => {
     const { active, over } = event;
 

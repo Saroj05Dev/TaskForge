@@ -97,11 +97,10 @@ const TaskContainer = () => {
         assigneeEmail: data.assigneeEmail, // Store email for future edits
       };
 
-      console.log("Updating task with version:", updatePayload.version);
-
       await dispatch(
         updateTask({ taskId: selectedTask._id, data: updatePayload })
       ).unwrap();
+
       closeFormModal();
       toast.success("Task updated successfully");
     } catch (error) {
