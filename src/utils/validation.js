@@ -2,7 +2,8 @@
 export const VALIDATION_PATTERNS = {
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^A-Za-z0-9]).{8,}$/,
-  fullName: /^[A-Za-z]+([ '-][A-Za-z]+)*$/,
+  // Allow letters, spaces, hyphens, apostrophes - must start and end with letter
+  fullName: /^[A-Za-z]+(?:[\s'-][A-Za-z]+)*$/,
 };
 
 // Validation error messages
@@ -21,6 +22,7 @@ export const VALIDATION_MESSAGES = {
     required: "Full name is required",
     invalid:
       "Full name must contain only letters, spaces, hyphens, and apostrophes",
+    minLength: "Full name must be at least 2 characters",
   },
 };
 
@@ -54,7 +56,7 @@ export const validateFullName = (fullName) => {
   if (!fullName || fullName.trim() === "") {
     return { isValid: false, error: VALIDATION_MESSAGES.fullName.required };
   }
-  if (!VALIDATION_PATTERNS.fullName.test(fullName)) {
+  if (!VALIDATION_PATTERNS.fullName.test(fullName.trim())) {
     return { isValid: false, error: VALIDATION_MESSAGES.fullName.invalid };
   }
   return { isValid: true, error: null };
