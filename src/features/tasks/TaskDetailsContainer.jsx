@@ -65,7 +65,8 @@ const TaskDetailsContainer = () => {
 
     // Comment events
     const handleCommentAdded = (comment) => {
-      if (comment.task === taskId) {
+      // Backend sends "taskId" not "task"
+      if (comment.taskId === taskId) {
         dispatch(fetchComments(taskId));
       }
     };
@@ -78,6 +79,7 @@ const TaskDetailsContainer = () => {
 
     // Attachment events
     const handleAttachmentAdded = (attachment) => {
+      // Backend sends "task" field
       if (attachment.task === taskId) {
         dispatch(fetchAttachments(taskId));
       }
@@ -91,13 +93,15 @@ const TaskDetailsContainer = () => {
 
     // Subtask events
     const handleSubtaskAdded = (subtask) => {
-      if (subtask.task === taskId) {
+      // Backend sends "parentTask" not "task"
+      if (subtask.parentTask === taskId) {
         dispatch(fetchSubtasks(taskId));
       }
     };
 
     const handleSubtaskUpdated = (subtask) => {
-      if (subtask.task === taskId) {
+      // Backend sends "parentTask" not "task"
+      if (subtask.parentTask === taskId) {
         dispatch(fetchSubtasks(taskId));
       }
     };
