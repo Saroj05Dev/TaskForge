@@ -7,7 +7,7 @@ import SmartAssignModal from "./components/SmartAssignModal";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import SearchBar from "./components/SearchBar";
 import FilterDropdowns from "./components/FilterDropdowns";
-import { Plus, ListTodo } from "lucide-react";
+import { Plus, ListTodo, Lightbulb } from "lucide-react";
 import BackButton from "@/components/ui/BackButton";
 
 const TaskPresenter = ({
@@ -64,6 +64,11 @@ const TaskPresenter = ({
               </h1>
               <p className="text-xs md:text-sm text-gray-600 mt-0.5">
                 Manage and organize your tasks
+              </p>
+              <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                <Lightbulb className="h-3.5 w-3.5" />
+                <span className="font-medium">Tip:</span> Click on any task to
+                view details, comments, and subtasks
               </p>
             </div>
           </div>
