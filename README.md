@@ -11,12 +11,12 @@
   </p>
 
   <p>
-    <a href="#features">Features</a> •
+    <a href="#-features">Features</a> •
     <a href="https://forgetask.netlify.app/dashboard">Demo</a> •
-    <a href="#tech-stack">Tech Stack</a> •
-    <a href="#getting-started">Getting Started</a> •
-    <a href="#usage">Usage</a> •
-    <a href="#contributing">Contributing</a>
+    <a href="#️-tech-stack">Tech Stack</a> •
+    <a href="#-getting-started">Getting Started</a> •
+    <a href="#-usage">Usage</a> •
+    <a href="#-contributing">Contributing</a>
   </p>
 </div>
 
@@ -233,30 +233,10 @@ TaskForge/
 
 ## 📸 Screenshots
 
-> **Note**: Add your application screenshots here
-
-![Dashboard](./screenshots/dashboard.png)
-![Task Page](./screenshots/task-page.png)
-![Task Details Page](./screenshots/task-details.png)
-![Action Log Page](./screenshots/action-log.png)
-
----
-
-## 🎯 Roadmap
-
-- [x] Core task management functionality
-- [x] Real-time updates with Socket.IO
-- [x] Team collaboration features
-- [x] Email-based task assignment
-- [x] Activity tracking
-- [ ] Dark mode support
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] Integration with third-party tools (Slack, Jira, etc.)
-- [ ] Calendar view
-- [ ] Kanban board view
-- [ ] Time tracking
-- [ ] File storage integration
+![Dashboard](./screenshots/DashboardScrShot.png)
+![Task Page](./screenshots/TaskScrShot.png)
+![Task Details Page](./screenshots/TaskDetailsScrShot.png)
+![Action Log Page](./screenshots/ActionLogScrShot.png)
 
 ---
 
