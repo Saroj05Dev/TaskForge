@@ -19,10 +19,9 @@ const App = () => {
   useEffect(() => {
     socket.connect();
 
-    // TASK EVENTS
     socket.on("taskCreated", (task) => {
       console.log("Task created:", task.title);
-      dispatch(fetchTasks()); // Refresh task list
+      dispatch(fetchTasks());
     });
 
     socket.on("taskUpdated", (task) => {
@@ -33,63 +32,58 @@ const App = () => {
 
     socket.on("taskDeleted", ({ taskId }) => {
       console.log("Task deleted:", taskId);
-      dispatch(fetchTasks()); // Refresh task list
+      dispatch(fetchTasks());
     });
 
     socket.on("taskAssigned", ({ _id, assignedUser }) => {
       console.log("Task assigned:", _id, "to", assignedUser.fullName);
-      dispatch(fetchTasks()); // Refresh task list
+      dispatch(fetchTasks());
     });
 
     socket.on("taskConflict", ({ message }) => {
       console.log("Conflict detected:", message);
-      // Conflict modal will be shown via 409 response
     });
 
-    // TEAM EVENTS
     socket.on("teamCreated", (team) => {
       console.log("Team created:", team.name);
-      dispatch(fetchAllTeams()); // Refresh teams
+      dispatch(fetchAllTeams());
     });
 
     socket.on("teamUpdated", (team) => {
       console.log("Team updated:", team.name);
-      dispatch(fetchAllTeams()); // Refresh teams
+      dispatch(fetchAllTeams());
     });
 
     socket.on("teamDeleted", ({ teamId }) => {
       console.log("Team deleted:", teamId);
-      dispatch(fetchAllTeams()); // Refresh teams
+      dispatch(fetchAllTeams());
     });
 
     socket.on("memberInvited", ({ teamId, member }) => {
       console.log("Member invited to team:", teamId);
-      dispatch(fetchAllTeams()); // Refresh teams
+      dispatch(fetchAllTeams());
     });
 
     socket.on("memberRemoved", ({ teamId, userId }) => {
       console.log("Member removed from team:", teamId);
-      dispatch(fetchAllTeams()); // Refresh teams
+      dispatch(fetchAllTeams());
     });
 
-    // TASK SHARING EVENTS
     socket.on("taskShared", ({ taskId, teamId }) => {
       console.log("Task shared:", taskId, "with team:", teamId);
-      dispatch(fetchTasks()); // Refresh tasks
+      dispatch(fetchTasks());
     });
 
     socket.on("taskUnshared", ({ taskId, teamId }) => {
       console.log("Task unshared:", taskId, "from team:", teamId);
-      dispatch(fetchTasks()); // Refresh tasks
+      dispatch(fetchTasks());
     });
 
-    // ACTIVITY LOG
     socket.on("actionLogged", (activity) => {
       dispatch(prependActivity(activity));
     });
 
     return () => {
-      // Clean up all listeners
       socket.off("taskCreated");
       socket.off("taskUpdated");
       socket.off("taskDeleted");
