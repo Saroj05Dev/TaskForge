@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchComments } from "@/features/tasks/commentsSlice";
 import { fetchAttachments } from "@/features/tasks/attachmentsSlice";
 import { fetchSubtasks } from "@/features/tasks/subtasksSlice";
-import { smartAssignTask } from "@/features/tasks/taskSlice";
+import { smartAssignTask, fetchTaskById } from "@/features/tasks/taskSlice";
 import { useToast } from "@/contexts/ToastContext";
 import { useComments } from "@/hooks/useComments";
 import { useAttachments } from "@/hooks/useAttachments";
@@ -23,6 +23,7 @@ const TaskDetailsContainer = () => {
   const task = useSelector((state) =>
     state.tasks.items.find((t) => t._id === taskId)
   );
+  const { loading: taskLoading } = useSelector((state) => state.tasks);
 
   const {
     items: comments,
@@ -48,6 +49,14 @@ const TaskDetailsContainer = () => {
   const subtasksHook = useSubtasks(taskId);
 
   const [openSmartAssignModal, setOpenSmartAssignModal] = useState(false);
+
+  // Fetch task if not in store (e.g., on page refresh)
+  useEffect(() => {
+    if (taskId && !task && !taskLoading) {
+      console.log("Fetching task by ID:", taskId);
+      dispatch(fetchTaskById(taskId));
+    }
+  }, [taskId, task, taskLoading, dispatch]);
 
   // Fetch data on mount
   useEffect(() => {

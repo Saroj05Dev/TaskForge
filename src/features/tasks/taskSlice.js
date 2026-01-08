@@ -4,6 +4,7 @@ import {
   createTaskApi,
   deleteTaskApi,
   fetchTasksApi,
+  fetchTaskByIdApi,
   updateTaskApi,
   searchTasksApi,
   resolveConflictApi,
@@ -100,6 +101,20 @@ export const deleteTask = createAsyncThunk(
     } catch (error) {
       const message = error.response?.data?.message || "Failed to delete task";
       return rejectWithValue(message);
+    }
+  }
+);
+
+export const fetchTaskById = createAsyncThunk(
+  "tasks/fetchById",
+  async (taskId, { rejectWithValue }) => {
+    try {
+      const response = await fetchTaskByIdApi(taskId);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch task"
+      );
     }
   }
 );
@@ -210,6 +225,26 @@ const taskSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(searchTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // FETCH TASK BY ID
+      .addCase(fetchTaskById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchTaskById.fulfilled, (state, action) => {
+        state.loading = false;
+        // Add or update the task in items array
+        const index = state.items.findIndex(
+          (t) => t._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        } else {
+          state.items.push(action.payload);
+        }
+      })
+      .addCase(fetchTaskById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
