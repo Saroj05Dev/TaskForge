@@ -1,73 +1,28 @@
 import Modal from "@/components/ui/Modal";
-import { LogOut, AlertTriangle, Loader2 } from "lucide-react";
+import { LogOut, Loader2 } from "lucide-react";
 
-const LeaveTeamModal = ({ open, onClose, team, loading, onConfirm }) => {
-  return (
-    <Modal open={open} onClose={onClose}>
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-orange-100 rounded-lg">
-            <AlertTriangle className="h-6 w-6 text-orange-600" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">Leave Team</h3>
-            <p className="text-sm text-gray-600 mt-0.5">
-              Are you sure you want to leave?
-            </p>
-          </div>
-        </div>
-
-        {/* Warning Message */}
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
-          <p className="text-sm text-orange-800">
-            <span className="font-semibold">Warning:</span> You will lose access
-            to all tasks shared with this team. You can only rejoin if the team
-            creator invites you again.
-          </p>
-        </div>
-
-        {/* Team Info */}
-        {team && (
-          <div className="mb-6">
-            <p className="text-sm text-gray-600 mb-1">Leaving team:</p>
-            <p className="text-base font-semibold text-gray-900">{team.name}</p>
-            {team.description && (
-              <p className="text-sm text-gray-500 mt-1">{team.description}</p>
-            )}
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3">
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={loading}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Leaving...
-              </>
-            ) : (
-              <>
-                <LogOut size={18} />
-                Leave Team
-              </>
-            )}
-          </button>
-        </div>
+const LeaveTeamModal = ({ open, onClose, team, loading, onConfirm }) => (
+  <Modal open={open} onClose={onClose} maxWidth="max-w-sm">
+    <div className="px-5 py-6 flex flex-col items-center text-center gap-4">
+      <div className="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center">
+        <LogOut size={24} className="text-orange-500" />
       </div>
-    </Modal>
-  );
-};
+      <div>
+        <h3 className="text-base font-semibold text-gray-900 mb-1">Leave team?</h3>
+        <p className="text-sm text-gray-500 leading-relaxed">
+          You'll lose access to all tasks shared with{" "}
+          <span className="font-medium text-gray-700">{team?.name}</span>. You can only rejoin if re-invited.
+        </p>
+      </div>
+    </div>
+
+    <div className="flex gap-2 px-5 pb-5">
+      <button onClick={onClose} disabled={loading} className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all cursor-pointer disabled:opacity-40">Stay</button>
+      <button onClick={onConfirm} disabled={loading} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-orange-500 rounded-xl hover:bg-orange-600 transition-all cursor-pointer disabled:opacity-40 shadow-sm">
+        {loading ? <><Loader2 size={14} className="animate-spin" />Leaving...</> : <><LogOut size={14} />Leave</>}
+      </button>
+    </div>
+  </Modal>
+);
 
 export default LeaveTeamModal;

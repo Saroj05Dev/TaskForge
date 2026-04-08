@@ -1,50 +1,75 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
-const Modal = ({ open, onClose, children }) => {
-  // Close on ESC key
+/**
+ * Base modal shell.
+ * Props:
+ *   open       — boolean
+ *   onClose    — fn
+ *   title      — string (optional, renders a header)
+ *   icon       — ReactNode (optional, shown left of title)
+ *   maxWidth   — tailwind max-w class, default "max-w-lg"
+ *   children
+ */
+const Modal = ({ open, onClose, title, icon, maxWidth = "max-w-lg", children }) => {
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-
-    if (open) {
-      window.addEventListener("keydown", handleEsc);
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = "hidden";
-    }
-
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
     return () => {
-      window.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = "unset";
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
     };
   }, [open, onClose]);
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px]"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-200 my-8"
+        className={`relative w-full ${maxWidth} bg-white rounded-2xl shadow-2xl shadow-black/10 border border-gray-100 flex flex-col max-h-[90vh] overflow-hidden`}
       >
-        {/* Close Button */}
-        <div className="flex justify-end mb-2 sticky top-0 bg-white z-10">
+        {/* Header — only rendered when title is provided */}
+        {title && (
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 shrink-0">
+            {icon && (
+              <div className="shrink-0">{icon}</div>
+            )}
+            <h2 className="flex-1 text-base font-semibold text-gray-900">{title}</h2>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer shrink-0"
+              aria-label="Close"
+            >
+              <X size={17} />
+            </button>
+          </div>
+        )}
+
+        {/* Close button when no title */}
+        {!title && (
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
+            className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer z-10"
+            aria-label="Close"
           >
-            <X size={20} />
+            <X size={17} />
           </button>
-        </div>
+        )}
 
-        {/* Modal Content */}
-        {children}
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1">
+          {children}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

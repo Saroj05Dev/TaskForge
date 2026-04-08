@@ -116,14 +116,24 @@ const Navbar = ({ onMenuClick }) => {
 
   return (
     <nav className="h-16 bg-white border-b border-gray-100 flex items-center gap-3 px-4 md:px-6 shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.04)] z-40">
-      {/* Mobile menu toggle */}
+      {/* Mobile menu toggle — only needed on lg+ where sidebar exists */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors shrink-0"
+        className="hidden lg:flex p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors shrink-0"
         aria-label="Toggle menu"
       >
         <Menu size={20} />
       </button>
+
+      {/* Logo — mobile only */}
+      <div
+        className="lg:hidden flex items-center shrink-0 cursor-pointer"
+        onClick={() => navigate("/dashboard")}
+      >
+        <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center select-none">
+          <span className="text-white text-[10px] font-black tracking-tight leading-none">TF</span>
+        </div>
+      </div>
 
       {/* ── Search with suggestions ── */}
       <div
