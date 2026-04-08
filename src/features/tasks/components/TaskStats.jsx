@@ -6,34 +6,38 @@ import { CheckSquare, Clock, CheckCircle, Users } from "lucide-react";
 const TaskStats = () => {
   const { total, inProgress, completed } = useTasks();
   const { team } = useCurrentTeam();
-
   const memberCount = team?.members?.length || 0;
+  const todo = total - inProgress - completed;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        title="TOTAL TASKS"
+        title="Total Tasks"
         value={total}
         icon={CheckSquare}
         color="blue"
+        subtitle="across all statuses"
       />
       <StatCard
-        title="IN PROGRESS"
-        value={inProgress}
-        icon={Clock}
+        title="Todo"
+        value={todo < 0 ? 0 : todo}
+        icon={CheckSquare}
         color="orange"
+        subtitle="not started yet"
       />
       <StatCard
-        title="COMPLETED"
+        title="Completed"
         value={completed}
         icon={CheckCircle}
         color="green"
+        subtitle="tasks finished"
       />
       <StatCard
-        title="TEAM MEMBERS"
+        title="Team Members"
         value={memberCount}
         icon={Users}
         color="purple"
+        subtitle="in active team"
       />
     </div>
   );

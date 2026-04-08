@@ -1,5 +1,6 @@
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { DndContext, closestCorners, DragOverlay } from "@dnd-kit/core";
 import { useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useTasks } from "@/hooks/useTasks";
@@ -9,6 +10,7 @@ import {
   persistTaskStatus,
 } from "@/features/tasks/taskSlice";
 import KanbanColumn from "./KanbanColumns";
+import KanbanCard from "./KanbanCard";
 import { canEditTask } from "@/utils/taskPermissions";
 
 const KanbanBoard = () => {
@@ -17,60 +19,71 @@ const KanbanBoard = () => {
   const { teams } = useTeams();
   const authUser = useSelector((state) => state.auth.user);
   const currentUserId = authUser?.id || authUser?._id;
+  const [activeTask, setActiveTask] = useState(null);
 
-  // Get list of team IDs the user belongs to
   const userTeamIds = teams.map((team) => team._id);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 5 },
+      // Small threshold so a click doesn't accidentally start a drag
+      activationConstraint: { distance: 8 },
     })
   );
 
-  // Filter tasks to only show those with edit or full access
-  // View-only tasks should not appear in Kanban since they can't be dragged
   const editableTasks = tasks.filter((task) =>
     canEditTask(task, currentUserId, userTeamIds)
   );
 
+  const COLUMNS = ["Todo", "In Progress", "Done"];
+
+  const handleDragStart = (event) => {
+    const task = editableTasks.find((t) => t._id === event.active.id);
+    setActiveTask(task ?? null);
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
+    setActiveTask(null);
 
     if (!over) return;
 
     const taskId = active.id;
     const newStatus = over.id;
 
-    // 1️ Optimistic UI update
-    dispatch(updateTaskStatus({ id: taskId, status: newStatus }));
+    // Only update if dropped on a valid column and status actually changed
+    if (!COLUMNS.includes(newStatus)) return;
+    const task = editableTasks.find((t) => t._id === taskId);
+    if (!task || task.status === newStatus) return;
 
-    // 2️ Persist change to backend
+    dispatch(updateTaskStatus({ id: taskId, status: newStatus }));
     dispatch(persistTaskStatus({ id: taskId, status: newStatus }));
   };
+
+  const handleDragCancel = () => setActiveTask(null);
 
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <KanbanColumn
-          id="Todo"
-          title="Todo"
-          tasks={editableTasks.filter((t) => t.status === "Todo")}
-        />
-        <KanbanColumn
-          id="In Progress"
-          title="In Progress"
-          tasks={editableTasks.filter((t) => t.status === "In Progress")}
-        />
-        <KanbanColumn
-          id="Done"
-          title="Done"
-          tasks={editableTasks.filter((t) => t.status === "Done")}
-        />
+        {COLUMNS.map((col) => (
+          <KanbanColumn
+            key={col}
+            id={col}
+            title={col}
+            tasks={editableTasks.filter((t) => t.status === col)}
+          />
+        ))}
       </div>
+
+      {/* Floating card that follows the cursor while dragging */}
+      <DragOverlay dropAnimation={{ duration: 180, easing: "ease" }}>
+        {activeTask ? <KanbanCard task={activeTask} isOverlay /> : null}
+      </DragOverlay>
     </DndContext>
   );
 };

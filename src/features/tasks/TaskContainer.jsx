@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import store from "@/store/store";
 import TaskPresenter from "./TaskPresenter";
 import {
@@ -16,6 +17,7 @@ import ConflictResolutionModal from "./components/ConflictResolutionModal";
 const TaskContainer = () => {
   const dispatch = useDispatch();
   const toast = useToast();
+  const [searchParams] = useSearchParams();
   const {
     items: tasks,
     loading,
@@ -32,6 +34,12 @@ const TaskContainer = () => {
     clearSearch,
     clearFilters,
   } = useTaskSearch();
+
+  // Seed search from URL param (e.g. navbar global search)
+  useEffect(() => {
+    const q = searchParams.get("search");
+    if (q) setSearchText(q);
+  }, []);
 
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);

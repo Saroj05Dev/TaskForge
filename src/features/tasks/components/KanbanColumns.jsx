@@ -1,61 +1,83 @@
 import { useDroppable } from "@dnd-kit/core";
 import KanbanCard from "./KanbanCard";
-import EmptyState from "@/components/ui/EmptyState";
 
-const columnColors = {
-  Todo: "border-gray-300 bg-gray-50",
-  "In Progress": "border-orange-300 bg-orange-50",
-  Done: "border-green-300 bg-green-50",
-};
-
-const headerColors = {
-  Todo: "text-gray-700",
-  "In Progress": "text-orange-700",
-  Done: "text-green-700",
-};
-
-const badgeColors = {
-  Todo: "bg-gray-200 text-gray-700",
-  "In Progress": "bg-orange-200 text-orange-700",
-  Done: "bg-green-200 text-green-700",
+const COLUMN_CONFIG = {
+  "Todo": {
+    dot:          "bg-gray-400",
+    badge:        "bg-gray-100 text-gray-600",
+    header:       "text-gray-700",
+    bg:           "bg-gray-50",
+    border:       "border-gray-200",
+    overBg:       "bg-gray-100",
+    overBorder:   "border-gray-400",
+    emptyBorder:  "border-gray-300",
+    emptyText:    "text-gray-400",
+  },
+  "In Progress": {
+    dot:          "bg-blue-500",
+    badge:        "bg-blue-50 text-blue-700",
+    header:       "text-blue-700",
+    bg:           "bg-blue-50/50",
+    border:       "border-blue-100",
+    overBg:       "bg-blue-50",
+    overBorder:   "border-blue-400",
+    emptyBorder:  "border-blue-200",
+    emptyText:    "text-blue-400",
+  },
+  "Done": {
+    dot:          "bg-green-500",
+    badge:        "bg-green-50 text-green-700",
+    header:       "text-green-700",
+    bg:           "bg-green-50/50",
+    border:       "border-green-100",
+    overBg:       "bg-green-50",
+    overBorder:   "border-green-400",
+    emptyBorder:  "border-green-200",
+    emptyText:    "text-green-400",
+  },
 };
 
 const KanbanColumn = ({ id, title, tasks }) => {
-  const { setNodeRef } = useDroppable({ id });
+  const { setNodeRef, isOver } = useDroppable({ id });
+  const cfg = COLUMN_CONFIG[title] ?? COLUMN_CONFIG["Todo"];
 
   return (
     <div
-      ref={setNodeRef}
-      className={`rounded-xl border-2 ${
-        columnColors[title] || "border-gray-300 bg-gray-50"
-      } p-4 min-h-[400px] transition-all duration-200`}
+      className={`
+        rounded-2xl border-2 flex flex-col min-h-[420px] cursor-default
+        transition-colors duration-150
+        ${isOver ? `${cfg.overBg} ${cfg.overBorder}` : `${cfg.bg} ${cfg.border}`}
+      `}
     >
-      <div className="flex items-center justify-between mb-4">
-        <h3
-          className={`font-semibold text-sm ${
-            headerColors[title] || "text-gray-700"
-          }`}
-        >
-          {title}
-        </h3>
-        <span
-          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-            badgeColors[title] || "bg-gray-200 text-gray-700"
-          }`}
-        >
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-black/5 shrink-0">
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
+          <h3 className={`text-sm font-semibold ${cfg.header}`}>{title}</h3>
+        </div>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full tabular-nums ${cfg.badge}`}>
           {tasks.length}
         </span>
       </div>
 
-      {tasks.length === 0 ? (
-        <EmptyState message={`No tasks in ${title}`} />
-      ) : (
-        <div className="space-y-3">
-          {tasks.map((task) => (
-            <KanbanCard key={task._id} task={task} />
-          ))}
-        </div>
-      )}
+      {/* Drop zone — ref goes here so the whole body is droppable */}
+      <div ref={setNodeRef} className="flex-1 p-3 space-y-2.5">
+        {tasks.length === 0 ? (
+          <div
+            className={`
+              flex items-center justify-center h-full min-h-[80px] rounded-xl
+              border-2 border-dashed transition-colors duration-150
+              ${isOver ? cfg.overBorder : cfg.emptyBorder}
+            `}
+          >
+            <p className={`text-xs font-medium ${isOver ? cfg.header : cfg.emptyText}`}>
+              {isOver ? "Release to drop" : "Drop tasks here"}
+            </p>
+          </div>
+        ) : (
+          tasks.map((task) => <KanbanCard key={task._id} task={task} />)
+        )}
+      </div>
     </div>
   );
 };

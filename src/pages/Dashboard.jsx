@@ -3,22 +3,28 @@ import TaskStats from "@/features/tasks/components/TaskStats";
 import TaskOverview from "@/features/tasks/components/TaskOverview";
 import KanbanBoard from "@/features/tasks/components/KanbanBoard";
 import TeamQuickActions from "../features/teams/TeamQuickActions";
-import TeamSelector from "@/features/teams/components/TeamSelector";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchTasks } from "../features/tasks/taskSlice";
 import { fetchAllTeams } from "../features/teams/teamsSlice";
 import { fetchActivities } from "../features/activity/activitySlice";
-import { useTeams } from "@/hooks/useTeams";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, LayoutDashboard } from "lucide-react";
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+};
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { teams, currentTeam, selectTeam } = useTeams();
+  const user = useSelector((state) => state.auth.user);
 
-  // Fetching tasks everytime when Dashboard mounts
   useEffect(() => {
     dispatch(fetchTasks());
+    dispatch(fetchAllTeams());
+    dispatch(fetchActivities());
   }, [dispatch]);
 
   const handleRefresh = () => {
@@ -27,66 +33,66 @@ const Dashboard = () => {
     dispatch(fetchActivities());
   };
 
+  const firstName = user?.fullName?.split(" ")[0] ?? "there";
+
   return (
     <DashboardLayout>
-      {/* Header */}
-      <div className="flex flex-col gap-4 mb-6">
-        {/* Title and Actions Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-              Dashboard
-            </h1>
-            <p className="text-xs md:text-sm text-gray-600 mt-1">
-              Welcome to your collaborative task workspace
-            </p>
+      <div className="max-w-7xl mx-auto space-y-8">
+
+        {/* ── Header ── */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-blue-600 rounded-xl shadow-sm">
+              <LayoutDashboard size={18} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">
+                {getGreeting()}, {firstName} 👋
+              </h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Here's what's happening with your tasks today.
+              </p>
+            </div>
           </div>
+
           <button
             onClick={handleRefresh}
-            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+            className="group flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 shadow-sm self-start sm:self-auto"
           >
-            <RefreshCw size={16} />
-            <span className="hidden sm:inline">Refresh</span>
+            <RefreshCw
+              size={14}
+              className="group-hover:rotate-180 transition-transform duration-500"
+            />
+            Refresh
           </button>
         </div>
 
-        {/* Team Selector Row */}
-        {teams && teams.length > 0 && (
-          <div className="flex items-center gap-3">
-            <label className="text-sm font-medium text-gray-700 shrink-0">
-              Active Team:
-            </label>
-            <TeamSelector
-              teams={teams}
-              currentTeam={currentTeam}
-              onSelectTeam={selectTeam}
-            />
+        {/* ── Stats ── */}
+        <section>
+          <TaskStats />
+        </section>
+
+        {/* ── Overview + Team ── */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <TaskOverview />
           </div>
-        )}
-      </div>
+          <div>
+            <TeamQuickActions />
+          </div>
+        </section>
 
-      {/* Stats */}
-      <TaskStats />
+        {/* ── Kanban ── */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-base font-semibold text-gray-900">Kanban Board</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Drag and drop to update task status</p>
+            </div>
+          </div>
+          <KanbanBoard />
+        </section>
 
-      {/* Middle section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <div className="lg:col-span-2">
-          <TaskOverview />
-        </div>
-        <TeamQuickActions />
-      </div>
-
-      {/* Kanban */}
-      <div className="mt-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <h2 className="text-base md:text-lg font-semibold text-gray-900">
-            Kanban Board
-          </h2>
-          <p className="text-xs md:text-sm text-gray-600">
-            Drag and drop tasks to update status
-          </p>
-        </div>
-        <KanbanBoard />
       </div>
     </DashboardLayout>
   );

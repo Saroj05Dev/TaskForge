@@ -81,100 +81,89 @@ const TeamQuickActions = () => {
   // Empty state - no teams
   if (!teams || teams.length === 0) {
     return (
-      <div className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-        <div className="flex items-center gap-2 mb-4">
-          <Users className="text-purple-600" size={20} />
-          <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+      <div className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
+        <div className="flex items-center gap-2.5 mb-5">
+          <div className="p-2 bg-purple-50 rounded-lg">
+            <Users size={16} className="text-purple-600" />
+          </div>
+          <h3 className="text-base font-semibold text-gray-900">Quick Actions</h3>
         </div>
 
         {/* Empty State */}
-        <div className="text-center py-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <Users className="text-blue-600" size={32} />
+        <div className="text-center py-6">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-50 rounded-2xl mb-4">
+            <Users className="text-blue-600" size={26} />
           </div>
-          <h4 className="text-lg font-semibold text-gray-900 mb-2">
-            No Team Yet
-          </h4>
-          <p className="text-sm text-gray-600 mb-6">
+          <h4 className="text-sm font-semibold text-gray-900 mb-1">No Team Yet</h4>
+          <p className="text-xs text-gray-500 mb-5 leading-relaxed">
             Create a team to start collaborating with others
           </p>
           <button
             onClick={() => setOpenCreateTeam(true)}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
           >
-            <PlusCircle size={18} />
+            <PlusCircle size={16} />
             Create Your First Team
           </button>
         </div>
 
-        {/* CREATE TEAM MODAL */}
-        <CreateTeamModal
-          open={openCreateTeam}
-          onClose={() => setOpenCreateTeam(false)}
-        />
+        <CreateTeamModal open={openCreateTeam} onClose={() => setOpenCreateTeam(false)} />
       </div>
     );
   }
 
-  // Has teams
   return (
-    <div className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-      <div className="flex items-center gap-2 mb-4">
-        <Users className="text-purple-600" size={20} />
-        <h3 className="text-lg font-semibold text-gray-900">Team Management</h3>
+    <div className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
+      <div className="flex items-center gap-2.5 mb-5">
+        <div className="p-2 bg-purple-50 rounded-lg">
+          <Users size={16} className="text-purple-600" />
+        </div>
+        <h3 className="text-base font-semibold text-gray-900">Team Management</h3>
       </div>
 
       {/* Team Selector */}
       {teams.length > 1 && (
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
             Current Team
           </label>
-          <TeamSelector
-            teams={teams}
-            currentTeam={currentTeam}
-            onSelectTeam={selectTeam}
-          />
+          <TeamSelector teams={teams} currentTeam={currentTeam} onSelectTeam={selectTeam} />
         </div>
       )}
 
       {/* Current Team Info */}
       {currentTeam && (
-        <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <div className="flex-1">
-              <h4 className="text-base font-semibold text-gray-900">
-                {currentTeam.name}
-              </h4>
+        <div className="mb-5 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h4 className="text-sm font-semibold text-gray-900 truncate">{currentTeam.name}</h4>
               {currentTeam.description && (
-                <p className="text-sm text-gray-600 mt-1">
-                  {currentTeam.description}
-                </p>
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{currentTeam.description}</p>
               )}
             </div>
             {isCreator && (
               <button
                 onClick={() => setOpenEdit(true)}
-                className="p-1.5 text-gray-600 hover:bg-gray-200 rounded transition-colors"
+                className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-lg transition-colors shrink-0"
                 title="Edit team"
               >
-                <Edit3 size={16} />
+                <Edit3 size={14} />
               </button>
             )}
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-400 mt-2">
             {currentTeam.members?.length || 0} members
           </p>
         </div>
       )}
 
-      {/* ACTION BUTTONS */}
-      <div className="flex flex-col gap-3 mb-6">
+      {/* Action Buttons */}
+      <div className="flex flex-col gap-2 mb-5">
         <button
           onClick={() => setOpenCreateTeam(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
         >
-          <PlusCircle size={18} />
+          <PlusCircle size={16} />
           Create New Team
         </button>
 
@@ -182,19 +171,18 @@ const TeamQuickActions = () => {
           <>
             <button
               onClick={() => setOpenInvite(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 bg-white text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 bg-white text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
             >
-              <UserPlus size={18} />
+              <UserPlus size={16} />
               Invite Member
             </button>
 
-            {/* Show Leave button ONLY for non-creators */}
             {!isCreator && (
               <button
                 onClick={() => setOpenLeave(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 border border-orange-300 bg-white text-orange-700 text-sm font-medium rounded-lg hover:bg-orange-50 hover:border-orange-400 transition-all duration-200"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 border border-orange-200 bg-white text-orange-600 text-sm font-medium rounded-xl hover:bg-orange-50 hover:border-orange-300 transition-all duration-200"
               >
-                <LogOut size={18} />
+                <LogOut size={16} />
                 Leave Team
               </button>
             )}
@@ -202,70 +190,29 @@ const TeamQuickActions = () => {
         )}
       </div>
 
-      {/* MEMBERS LIST */}
+      {/* Members List */}
       {currentTeam && (
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 mb-3">
-            Team Members
-          </h4>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            Members
+          </p>
           <TeamMembersList
             members={currentTeam.members || []}
             isCreator={isCreator}
             currentUserId={currentUserId}
-            onRemove={(member) => {
-              setSelectedMember(member);
-              setOpenRemove(true);
-            }}
+            onRemove={(member) => { setSelectedMember(member); setOpenRemove(true); }}
           />
         </div>
       )}
 
-      {/* MODALS */}
-      <CreateTeamModal
-        open={openCreateTeam}
-        onClose={() => {
-          setOpenCreateTeam(false);
-          dispatch(fetchAllTeams());
-        }}
-      />
-
+      {/* Modals */}
+      <CreateTeamModal open={openCreateTeam} onClose={() => { setOpenCreateTeam(false); dispatch(fetchAllTeams()); }} />
       {currentTeam && (
         <>
-          <InviteMemberModal
-            open={openInvite}
-            onClose={() => {
-              setOpenInvite(false);
-              dispatch(fetchAllTeams());
-            }}
-            teamId={currentTeam._id}
-          />
-
-          <EditTeamModal
-            open={openEdit}
-            onClose={() => {
-              setOpenEdit(false);
-              dispatch(fetchAllTeams());
-            }}
-            team={currentTeam}
-          />
-
-          <LeaveTeamModal
-            open={openLeave}
-            onClose={() => setOpenLeave(false)}
-            team={currentTeam}
-            loading={leaving}
-            onConfirm={handleLeaveTeam}
-          />
-
-          <RemoveMemberModal
-            open={openRemove}
-            onClose={() => {
-              setOpenRemove(false);
-              dispatch(fetchAllTeams());
-            }}
-            member={selectedMember}
-            teamId={currentTeam._id}
-          />
+          <InviteMemberModal open={openInvite} onClose={() => { setOpenInvite(false); dispatch(fetchAllTeams()); }} teamId={currentTeam._id} />
+          <EditTeamModal open={openEdit} onClose={() => { setOpenEdit(false); dispatch(fetchAllTeams()); }} team={currentTeam} />
+          <LeaveTeamModal open={openLeave} onClose={() => setOpenLeave(false)} team={currentTeam} loading={leaving} onConfirm={handleLeaveTeam} />
+          <RemoveMemberModal open={openRemove} onClose={() => { setOpenRemove(false); dispatch(fetchAllTeams()); }} member={selectedMember} teamId={currentTeam._id} />
         </>
       )}
     </div>
