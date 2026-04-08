@@ -49,8 +49,14 @@ const SmartAssignModal = ({ open, onClose, task }) => {
   if (!open) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-[9999]">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
+    <div
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-9999 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl max-w-md w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -68,7 +74,7 @@ const SmartAssignModal = ({ open, onClose, task }) => {
           </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
           >
             <X size={20} className="text-gray-500" />
           </button>
@@ -142,14 +148,14 @@ const SmartAssignModal = ({ open, onClose, task }) => {
           <button
             onClick={onClose}
             disabled={assigning}
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleAssign}
             disabled={!selectedTeamId || assigning || teams.length === 0}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {assigning ? (
               <>

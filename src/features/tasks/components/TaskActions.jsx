@@ -1,79 +1,51 @@
 import { Sparkles, Edit2, Trash2, Share2 } from "lucide-react";
 
-const TaskActions = ({
-  task,
-  onEdit,
-  onDelete,
-  onShare,
-  onSmartAssign,
-  disabled,
-}) => {
-  const handleEdit = (e) => {
-    e.stopPropagation();
-    onEdit(task);
-  };
+const btn = "flex-1 flex items-center justify-center gap-1.5 py-2 h-9 text-xs font-medium rounded-lg border transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap";
 
-  const handleDelete = (e) => {
-    e.stopPropagation();
-    onDelete(task);
-  };
-
-  const handleShare = (e) => {
-    e.stopPropagation();
-    if (onShare) {
-      onShare(task);
-    }
-  };
-
-  const handleSmartAssign = (e) => {
-    e.stopPropagation();
-    if (onSmartAssign) {
-      onSmartAssign(task);
-    }
-  };
+const TaskActions = ({ task, onEdit, onDelete, onShare, onSmartAssign, disabled }) => {
+  const stop = (fn) => (e) => { e.stopPropagation(); fn(task); };
 
   return (
-    <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-      {/* SMART ASSIGN */}
+    <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-gray-100">
       <button
         disabled={disabled}
-        onClick={handleSmartAssign}
-        className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-purple-700 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        onClick={stop(onSmartAssign)}
+        className={`${btn} text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100 hover:border-purple-300`}
+        title="Smart Assign"
       >
-        <Sparkles size={16} />
-        <span className="hidden sm:inline">Smart Assign</span>
+        <Sparkles size={13} />
+        <span className="hidden sm:inline">Assign</span>
       </button>
 
-      {/* SHARE */}
       {onShare && (
         <button
-          onClick={handleShare}
+          onClick={stop(onShare)}
           disabled={disabled}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+          className={`${btn} text-teal-700 bg-teal-50 border-teal-200 hover:bg-teal-100 hover:border-teal-300`}
           title="Share with team"
         >
-          <Share2 size={16} />
+          <Share2 size={13} />
           <span className="hidden sm:inline">Share</span>
         </button>
       )}
 
-      {/* EDIT */}
       <button
         disabled={disabled}
-        onClick={handleEdit}
-        className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        onClick={stop(onEdit)}
+        className={`${btn} text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100 hover:border-blue-300`}
+        title="Edit task"
       >
-        <Edit2 size={16} />
+        <Edit2 size={13} />
         <span className="hidden sm:inline">Edit</span>
       </button>
 
-      {/* DELETE */}
       <button
         disabled={disabled}
-        onClick={handleDelete}
-        className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        onClick={stop(onDelete)}
+        className={`${btn} text-red-600 bg-red-50 border-red-200 hover:bg-red-100 hover:border-red-300`}
+        title="Delete task"
       >
-        <Trash2 size={16} />
+        <Trash2 size={13} />
         <span className="hidden sm:inline">Delete</span>
       </button>
     </div>

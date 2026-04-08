@@ -1,15 +1,14 @@
-import { Filter, X } from "lucide-react";
+import { X, SlidersHorizontal } from "lucide-react";
 
 const FilterDropdowns = ({ filters, onChange, onClear }) => {
   const hasActiveFilters = filters.priority || filters.status;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {/* Priority Filter */}
       <select
         value={filters.priority || ""}
         onChange={(e) => onChange("priority", e.target.value)}
-        className="px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
+        className="px-3 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm text-gray-700 outline-none transition-all duration-200 cursor-pointer"
       >
         <option value="">All Priorities</option>
         <option value="High">High</option>
@@ -17,11 +16,10 @@ const FilterDropdowns = ({ filters, onChange, onClear }) => {
         <option value="Low">Low</option>
       </select>
 
-      {/* Status Filter */}
       <select
         value={filters.status || ""}
         onChange={(e) => onChange("status", e.target.value)}
-        className="px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
+        className="px-3 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm text-gray-700 outline-none transition-all duration-200 cursor-pointer"
       >
         <option value="">All Statuses</option>
         <option value="Todo">Todo</option>
@@ -29,25 +27,20 @@ const FilterDropdowns = ({ filters, onChange, onClear }) => {
         <option value="Done">Done</option>
       </select>
 
-      {/* Clear Filters Button */}
       {hasActiveFilters && (
-        <button
-          onClick={onClear}
-          className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-        >
-          <X size={16} />
-          <span className="hidden sm:inline">Clear Filters</span>
-        </button>
-      )}
-
-      {/* Active Filter Count */}
-      {hasActiveFilters && (
-        <div className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm">
-          <Filter size={16} />
-          <span className="font-medium">
+        <>
+          <span className="flex items-center gap-1.5 px-2.5 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">
+            <SlidersHorizontal size={13} />
             {[filters.priority, filters.status].filter(Boolean).length} active
           </span>
-        </div>
+          <button
+            onClick={onClear}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 rounded-xl transition-all duration-150 cursor-pointer"
+          >
+            <X size={13} />
+            Clear
+          </button>
+        </>
       )}
     </div>
   );
