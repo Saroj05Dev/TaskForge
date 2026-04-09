@@ -12,7 +12,6 @@ import {
 } from "./taskSlice";
 import { useTaskSearch } from "@/hooks/useTaskSearch";
 import { useToast } from "@/contexts/ToastContext";
-import ConflictResolutionModal from "./components/ConflictResolutionModal";
 
 const TaskContainer = () => {
   const dispatch = useDispatch();
@@ -97,12 +96,11 @@ const TaskContainer = () => {
 
   const handleUpdate = async (data) => {
     try {
-      // Include version for conflict detection
       const updatePayload = {
         ...data,
         version: selectedTask?.version || 0,
         lastModified: selectedTask?.lastModified,
-        assigneeEmail: data.assigneeEmail, // Store email for future edits
+        assigneeEmail: data.assigneeEmail,
       };
 
       await dispatch(
@@ -112,17 +110,18 @@ const TaskContainer = () => {
       closeFormModal();
       toast.success("Task updated successfully");
     } catch (error) {
-      // If update failed, check if it's a conflict (modal will open via Redux)
-      // Just close the form modal and let the conflict modal show
+      // Close the form modal — if it's a conflict, the ConflictResolutionModal
+      // (mounted globally in App.jsx) will open automatically via Redux state
       closeFormModal();
 
-      // Show error toast only if it's not a conflict
-      setTimeout(() => {
-        const state = store.getState();
-        if (!state.tasks.conflictData.isOpen) {
-          toast.error(error?.message || error || "Failed to update task");
-        }
-      }, 100);
+      // Only show error toast if it's NOT a conflict (conflict has its own modal)
+      const isConflict = typeof error === "string"
+        ? error.toLowerCase().includes("conflict")
+        : error?.message?.toLowerCase().includes("conflict");
+
+      if (!isConflict) {
+        toast.error(error?.message || error || "Failed to update task");
+      }
     }
   };
 
@@ -175,7 +174,6 @@ const TaskContainer = () => {
         onCreate={handleCreate}
         onUpdate={handleUpdate}
         onConfirmDelete={handleConfirmDelete}
-        // Search and filter props
         searchText={searchText}
         onSearchChange={setSearchText}
         onSearchClear={clearSearch}
@@ -183,8 +181,6 @@ const TaskContainer = () => {
         onFilterChange={handleFilterChange}
         onFiltersClear={clearFilters}
       />
-
-      <ConflictResolutionModal />
     </>
   );
 };

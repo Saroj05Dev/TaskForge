@@ -50,10 +50,22 @@ const ConflictResolutionModal = () => {
   const conflictMessage = formatConflictMessage(serverVersion);
 
   const handleResolve = async (strategy) => {
-    if (strategy === "discard") { dispatch(clearConflictData()); window.location.reload(); return; }
+    if (strategy === "discard") {
+      dispatch(clearConflictData());
+      window.location.reload();
+      return;
+    }
     try {
-      await dispatch(resolveConflict({ taskId, resolutionType: strategy, taskData: localChanges })).unwrap();
-      toast.success(`Conflict resolved`);
+      // Strip version/lastModified from localChanges — the backend manages these
+      const { version, lastModified, updatedBy, ...cleanChanges } = localChanges || {};
+
+      await dispatch(resolveConflict({
+        taskId,
+        resolutionType: strategy,
+        taskData: cleanChanges,
+      })).unwrap();
+
+      toast.success(`Conflict resolved — ${strategy === "overwrite" ? "your version applied" : "changes merged"}`);
       dispatch(clearConflictData());
     } catch (error) {
       toast.error(error || "Failed to resolve conflict");

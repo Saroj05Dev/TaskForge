@@ -23,7 +23,7 @@ const SmartAssignModal = ({ open, onClose, task }) => {
       toast.success(`Task assigned to ${result.assignedUser?.fullName || "team member"}`);
       onClose();
     } catch (error) {
-      console.error("Smart assign failed:", error);
+      toast.error(error || "Only the task creator can use Smart Assign.");
     } finally { setAssigning(false); }
   };
 

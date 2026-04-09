@@ -184,9 +184,15 @@ const taskSlice = createSlice({
       const index = state.items.findIndex((t) => t._id === updatedTask._id);
       if (index !== -1) {
         const originalTask = state.items[index];
+        // If socket payload has assignedUser as a plain ID string, preserve the
+        // populated object from the original so email is available in edit modal
+        const assignedUser =
+          updatedTask.assignedUser && typeof updatedTask.assignedUser === "object"
+            ? updatedTask.assignedUser
+            : originalTask.assignedUser;
         state.items[index] = {
           ...updatedTask,
-          // sharedWith is computed server-side and not included in socket payloads
+          assignedUser,
           sharedWith: updatedTask.sharedWith ?? originalTask.sharedWith,
         };
       }

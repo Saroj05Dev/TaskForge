@@ -4,9 +4,10 @@ import AppRoutes from "@/routes";
 import { restoreSession } from "@/features/auth/login/loginSlice";
 import { socket } from "@/helpers/socket";
 import { prependActivity } from "@/features/activity/activitySlice";
-import { fetchTasks, updateTaskInList } from "@/features/tasks/taskSlice";
+import { fetchTasks } from "@/features/tasks/taskSlice";
 import { fetchAllTeams } from "@/features/teams/teamsSlice";
 import ServerWarmupIndicator from "@/components/ui/ServerWarmupIndicator";
+import ConflictResolutionModal from "@/features/tasks/components/ConflictResolutionModal";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -26,8 +27,8 @@ const App = () => {
 
     socket.on("taskUpdated", (task) => {
       console.log("Task updated:", task.title);
-      // Update only this specific task instead of fetching all
-      dispatch(updateTaskInList(task));
+      // Fetch fresh data to ensure populated fields and sharedWith are correct
+      dispatch(fetchTasks());
     });
 
     socket.on("taskDeleted", ({ taskId }) => {
@@ -36,7 +37,7 @@ const App = () => {
     });
 
     socket.on("taskAssigned", ({ _id, assignedUser }) => {
-      console.log("Task assigned:", _id, "to", assignedUser.fullName);
+      console.log("Task assigned:", _id, "to", assignedUser?.fullName);
       dispatch(fetchTasks());
     });
 
@@ -105,6 +106,8 @@ const App = () => {
     <>
       <ServerWarmupIndicator />
       <AppRoutes />
+      {/* Global conflict modal — mounted here so it works on any page */}
+      <ConflictResolutionModal />
     </>
   );
 };

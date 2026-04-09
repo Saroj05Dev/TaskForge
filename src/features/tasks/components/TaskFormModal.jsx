@@ -32,9 +32,10 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  // Don't close the modal here — let the parent (TaskContainer) decide
+  // based on whether the update succeeded or a conflict was detected
   const handleSubmit = () => {
     onSubmit({ ...form, assignedUser: form.assignedUser || null });
-    onClose();
   };
 
   const Icon = (
