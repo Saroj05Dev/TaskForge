@@ -81,21 +81,19 @@ const TeamQuickActions = () => {
   // Empty state - no teams
   if (!teams || teams.length === 0) {
     return (
-      <div className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
+      <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
         <div className="flex items-center gap-2.5 mb-5">
-          <div className="p-2 bg-purple-50 rounded-lg">
-            <Users size={16} className="text-purple-600" />
+          <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+            <Users size={16} className="text-purple-600 dark:text-purple-400" />
           </div>
-          <h3 className="text-base font-semibold text-gray-900">Quick Actions</h3>
+          <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h3>
         </div>
-
-        {/* Empty State */}
         <div className="text-center py-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-50 rounded-2xl mb-4">
-            <Users className="text-blue-600" size={26} />
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-50 dark:bg-blue-900/20 rounded-2xl mb-4">
+            <Users className="text-blue-600 dark:text-blue-400" size={26} />
           </div>
-          <h4 className="text-sm font-semibold text-gray-900 mb-1">No Team Yet</h4>
-          <p className="text-xs text-gray-500 mb-5 leading-relaxed">
+          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">No Team Yet</h4>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">
             Create a team to start collaborating with others
           </p>
           <button
@@ -113,18 +111,18 @@ const TeamQuickActions = () => {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
+    <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
       <div className="flex items-center gap-2.5 mb-5">
-        <div className="p-2 bg-purple-50 rounded-lg">
-          <Users size={16} className="text-purple-600" />
+        <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+          <Users size={16} className="text-purple-600 dark:text-purple-400" />
         </div>
-        <h3 className="text-base font-semibold text-gray-900">Team Management</h3>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">Team Management</h3>
       </div>
 
       {/* Team Selector */}
       {teams.length > 1 && (
         <div className="mb-4">
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
             Current Team
           </label>
           <TeamSelector teams={teams} currentTeam={currentTeam} onSelectTeam={selectTeam} />
@@ -133,57 +131,37 @@ const TeamQuickActions = () => {
 
       {/* Current Team Info */}
       {currentTeam && (
-        <div className="mb-5 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+        <div className="mb-5 p-3.5 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-semibold text-gray-900 truncate">{currentTeam.name}</h4>
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{currentTeam.name}</h4>
               {currentTeam.description && (
-                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{currentTeam.description}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{currentTeam.description}</p>
               )}
             </div>
             {isCreator && (
-              <button
-                onClick={() => setOpenEdit(true)}
-                className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-lg transition-colors shrink-0"
-                title="Edit team"
-              >
+              <button onClick={() => setOpenEdit(true)} className="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors shrink-0 cursor-pointer" title="Edit team">
                 <Edit3 size={14} />
               </button>
             )}
           </div>
-          <p className="text-xs text-gray-400 mt-2">
-            {currentTeam.members?.length || 0} members
-          </p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">{currentTeam.members?.length || 0} members</p>
         </div>
       )}
 
       {/* Action Buttons */}
       <div className="flex flex-col gap-2 mb-5">
-        <button
-          onClick={() => setOpenCreateTeam(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
-        >
-          <PlusCircle size={16} />
-          Create New Team
+        <button onClick={() => setOpenCreateTeam(true)} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow cursor-pointer">
+          <PlusCircle size={16} />Create New Team
         </button>
-
         {currentTeam && (
           <>
-            <button
-              onClick={() => setOpenInvite(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 bg-white text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
-            >
-              <UserPlus size={16} />
-              Invite Member
+            <button onClick={() => setOpenInvite(true)} className="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 cursor-pointer">
+              <UserPlus size={16} />Invite Member
             </button>
-
             {!isCreator && (
-              <button
-                onClick={() => setOpenLeave(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 border border-orange-200 bg-white text-orange-600 text-sm font-medium rounded-xl hover:bg-orange-50 hover:border-orange-300 transition-all duration-200"
-              >
-                <LogOut size={16} />
-                Leave Team
+              <button onClick={() => setOpenLeave(true)} className="flex items-center justify-center gap-2 px-4 py-2.5 border border-orange-200 dark:border-orange-800 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 text-sm font-medium rounded-xl hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-all duration-200 cursor-pointer">
+                <LogOut size={16} />Leave Team
               </button>
             )}
           </>
@@ -193,15 +171,8 @@ const TeamQuickActions = () => {
       {/* Members List */}
       {currentTeam && (
         <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Members
-          </p>
-          <TeamMembersList
-            members={currentTeam.members || []}
-            isCreator={isCreator}
-            currentUserId={currentUserId}
-            onRemove={(member) => { setSelectedMember(member); setOpenRemove(true); }}
-          />
+          <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Members</p>
+          <TeamMembersList members={currentTeam.members || []} isCreator={isCreator} currentUserId={currentUserId} onRemove={(member) => { setSelectedMember(member); setOpenRemove(true); }} />
         </div>
       )}
 

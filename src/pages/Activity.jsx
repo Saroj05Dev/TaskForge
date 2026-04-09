@@ -53,8 +53,8 @@ const Activity = () => {
               <ActivityIcon size={17} className="text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Activity Log</h1>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Activity Log</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {items.length} event{items.length !== 1 ? "s" : ""} · all team actions
               </p>
             </div>
@@ -75,21 +75,14 @@ const Activity = () => {
             {stats.map(({ type, count, cfg }) => {
               const Icon = cfg.icon;
               return (
-                <button
-                  key={type}
-                  onClick={() => setFilterType(filterType === type ? "" : type)}
+                <button key={type} onClick={() => setFilterType(filterType === type ? "" : type)}
                   className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all duration-150 cursor-pointer text-left w-full
-                    ${filterType === type
-                      ? `${cfg.bg} border-current ${cfg.color} shadow-sm`
-                      : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm"
-                    }`}
+                    ${filterType === type ? `${cfg.bg} border-current ${cfg.color} shadow-sm` : "bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-sm"}`}
                 >
-                  <div className={`p-2 rounded-lg shrink-0 ${cfg.bg}`}>
-                    <Icon size={14} className={cfg.color} />
-                  </div>
+                  <div className={`p-2 rounded-lg shrink-0 ${cfg.bg}`}><Icon size={14} className={cfg.color} /></div>
                   <div className="min-w-0">
-                    <p className="text-lg font-bold text-gray-900 tabular-nums leading-none">{count}</p>
-                    <p className="text-[11px] text-gray-500 truncate mt-0.5">{cfg.label}</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-none">{count}</p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate mt-0.5">{cfg.label}</p>
                   </div>
                 </button>
               );
@@ -99,59 +92,36 @@ const Activity = () => {
 
         {/* Filters row */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Action type filter */}
           <div className="relative">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-purple-100 focus:border-purple-400 text-sm text-gray-700 outline-none transition-all duration-200 cursor-pointer"
-            >
+            <select value={filterType} onChange={(e) => setFilterType(e.target.value)}
+              className="appearance-none pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-purple-100 dark:focus:ring-purple-900 focus:border-purple-400 text-sm text-gray-700 dark:text-gray-200 outline-none transition-all duration-200 cursor-pointer">
               <option value="">All actions</option>
-              {ACTION_TYPES.map(({ value, label }) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
+              {ACTION_TYPES.map(({ value, label }) => (<option key={value} value={value}>{label}</option>))}
             </select>
             <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
 
-          {/* Load limit */}
           <div className="relative">
-            <select
-              value={limit}
-              onChange={(e) => setLimit(Number(e.target.value))}
-              className="appearance-none pl-3 pr-8 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-purple-100 focus:border-purple-400 text-sm text-gray-700 outline-none transition-all duration-200 cursor-pointer"
-            >
-              {LIMITS.map((l) => (
-                <option key={l} value={l}>Last {l}</option>
-              ))}
+            <select value={limit} onChange={(e) => setLimit(Number(e.target.value))}
+              className="appearance-none pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-purple-100 dark:focus:ring-purple-900 focus:border-purple-400 text-sm text-gray-700 dark:text-gray-200 outline-none transition-all duration-200 cursor-pointer">
+              {LIMITS.map((l) => (<option key={l} value={l}>Last {l}</option>))}
             </select>
             <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
 
-          {/* Active filter badge + clear */}
           {filterType && (
             <div className="flex items-center gap-1.5">
-              <span className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 bg-purple-50 text-purple-700 rounded-lg border border-purple-100">
-                <Filter size={11} />
-                {ACTION_CONFIG[filterType]?.label ?? filterType}
+              <span className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 rounded-lg border border-purple-100 dark:border-purple-800">
+                <Filter size={11} />{ACTION_CONFIG[filterType]?.label ?? filterType}
               </span>
-              <button
-                onClick={() => setFilterType("")}
-                className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all cursor-pointer"
-                title="Clear filter"
-              >
-                <X size={13} />
-              </button>
+              <button onClick={() => setFilterType("")} className="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all cursor-pointer"><X size={13} /></button>
             </div>
           )}
-
-          <span className="ml-auto text-xs text-gray-400 tabular-nums">
-            {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-          </span>
+          <span className="ml-auto text-xs text-gray-400 tabular-nums">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</span>
         </div>
 
         {/* Activity feed */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               <div className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
@@ -162,15 +132,11 @@ const Activity = () => {
           )}
         </div>
 
-        {/* Load more */}
         {!loading && items.length >= limit && limit < 100 && (
           <div className="flex justify-center">
-            <button
-              onClick={() => setLimit((l) => Math.min(l + 20, 100))}
-              className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 bg-white text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 cursor-pointer shadow-sm"
-            >
-              <ChevronDown size={15} />
-              Load more
+            <button onClick={() => setLimit((l) => Math.min(l + 20, 100))}
+              className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm font-medium text-gray-600 dark:text-gray-400 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-150 cursor-pointer shadow-sm">
+              <ChevronDown size={15} />Load more
             </button>
           </div>
         )}

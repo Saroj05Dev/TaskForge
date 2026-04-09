@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import { FileText, AlignLeft, Flag, Activity, UserCircle, Plus, Pencil } from "lucide-react";
 
-const inputCls = "w-full px-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all duration-200 cursor-text";
+const inputCls = "w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 focus:border-blue-400 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 outline-none transition-all duration-200 cursor-text";
 const labelCls = "block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5";
 
 const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
@@ -90,7 +90,7 @@ const TaskFormModal = ({ open, onClose, onSubmit, initialData, mode }) => {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center gap-2 px-5 py-4 border-t border-gray-100 bg-gray-50/50">
+      <div className="flex items-center gap-2 px-5 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
         <button onClick={onClose} className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-100 transition-all cursor-pointer">
           Cancel
         </button>

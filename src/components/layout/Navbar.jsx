@@ -2,9 +2,10 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/features/auth/login/loginSlice";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   Menu, Search, LogOut, ChevronDown, X,
-  CheckSquare, Clock, CircleCheck, ArrowRight,
+  CheckSquare, Clock, CircleCheck, ArrowRight, Moon, Sun,
 } from "lucide-react";
 
 // Status badge config
@@ -26,6 +27,7 @@ const Navbar = ({ onMenuClick }) => {
   const dispatch   = useDispatch();
   const user       = useSelector((state) => state.auth.user);
   const allTasks   = useSelector((state) => state.tasks.items);
+  const { isDark, toggle } = useTheme();
 
   const [searchQuery,   setSearchQuery]   = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -115,7 +117,7 @@ const Navbar = ({ onMenuClick }) => {
   const isFocused = showSuggestions || searchQuery.length > 0;
 
   return (
-    <nav className="h-16 bg-white border-b border-gray-100 flex items-center gap-3 px-4 md:px-6 shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.04)] z-40">
+    <nav className="h-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3 px-4 md:px-6 shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.04)] z-40">
       {/* Mobile menu toggle — only needed on lg+ where sidebar exists */}
       <button
         onClick={onMenuClick}
@@ -142,10 +144,10 @@ const Navbar = ({ onMenuClick }) => {
       >
         {/* Input */}
         <div
-          className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-200 bg-gray-50 ${
+          className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-200 bg-gray-50 dark:bg-gray-800 ${
             isFocused
-              ? "border-blue-400 bg-white shadow-sm ring-2 ring-blue-100"
-              : "border-gray-200 hover:border-gray-300"
+              ? "border-blue-400 bg-white dark:bg-gray-800 shadow-sm ring-2 ring-blue-100 dark:ring-blue-900"
+              : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
           }`}
         >
           <Search
@@ -163,7 +165,7 @@ const Navbar = ({ onMenuClick }) => {
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleKeyDown}
             placeholder="Search tasks..."
-            className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none min-w-0"
+            className="flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 outline-none min-w-0"
             autoComplete="off"
           />
           {searchQuery && (
@@ -179,7 +181,7 @@ const Navbar = ({ onMenuClick }) => {
 
         {/* ── Suggestions dropdown ── */}
         {showSuggestions && searchQuery.trim() && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-100 shadow-lg shadow-gray-200/60 overflow-hidden z-50">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-lg overflow-hidden z-50">
             {suggestions.length > 0 ? (
               <>
                 <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
@@ -197,12 +199,12 @@ const Navbar = ({ onMenuClick }) => {
                           onMouseDown={() => selectSuggestion(task)}
                           onMouseEnter={() => setActiveIndex(i)}
                           className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                            isActive ? "bg-blue-50" : "hover:bg-gray-50"
+                            isActive ? "bg-blue-50 dark:bg-blue-900/30" : "hover:bg-gray-50 dark:hover:bg-gray-800"
                           }`}
                         >
                           <Icon size={14} className={`shrink-0 ${style.color}`} />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm text-gray-800 truncate font-medium">
+                            <p className="text-sm text-gray-800 dark:text-gray-200 truncate font-medium">
                               {task.title}
                             </p>
                             {task.description && (
@@ -242,6 +244,19 @@ const Navbar = ({ onMenuClick }) => {
       {/* Spacer */}
       <div className="flex-1" />
 
+      {/* Dark mode toggle */}
+      <button
+        onClick={toggle}
+        className="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 cursor-pointer shrink-0"
+        aria-label="Toggle dark mode"
+        title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {isDark
+          ? <Sun size={18} className="text-amber-400" />
+          : <Moon size={18} />
+        }
+      </button>
+
       {/* ── User menu ── */}
       {user ? (
         <div className="relative" ref={dropdownRef}>
@@ -262,14 +277,14 @@ const Navbar = ({ onMenuClick }) => {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl border border-gray-100 shadow-lg shadow-gray-200/60 py-1.5 z-50">
-              <div className="px-4 py-2.5 border-b border-gray-100 mb-1">
-                <p className="text-sm font-semibold text-gray-900 truncate">{user.fullName}</p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+            <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-lg py-1.5 z-50">
+              <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-800 mb-1">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user.fullName}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
               >
                 <LogOut size={15} />
                 Sign out

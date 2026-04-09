@@ -37,32 +37,27 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         onMouseLeave={() => setIsHovered(false)}
         className={`
           fixed lg:sticky top-0 left-0 h-screen z-50
-          bg-white border-r border-gray-100 flex flex-col
+          bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col
           transition-all duration-300 ease-in-out shadow-sm
           ${expanded ? "w-60" : "w-[68px]"}
           ${isCollapsed ? "-translate-x-full lg:translate-x-0" : "translate-x-0"}
         `}
       >
         {/* Brand */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100 shrink-0">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            {/* Letter mark — solid box, always fully visible even when collapsed */}
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shrink-0 select-none">
               <span className="text-white text-[11px] font-black tracking-tight leading-none">TF</span>
             </div>
-            {/* Text fades out when collapsed, but the box above never clips */}
-            <span
-              className={`text-[15px] font-bold text-gray-900 whitespace-nowrap transition-all duration-200 overflow-hidden ${
+            <span className={`text-[15px] font-bold text-gray-900 dark:text-gray-100 whitespace-nowrap transition-all duration-200 overflow-hidden ${
                 expanded ? "opacity-100 w-auto" : "opacity-0 w-0"
-              }`}
-            >
+              }`}>
               TaskForge
             </span>
           </div>
-
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className={`hidden lg:flex p-1.5 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all shrink-0 ${
+            className={`hidden lg:flex p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all shrink-0 cursor-pointer ${
               expanded ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
@@ -83,7 +78,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                  ${
                    isActive
                      ? "bg-blue-600 text-white shadow-sm"
-                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                     : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                  }`
               }
             >
@@ -109,13 +104,11 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         </nav>
 
         {/* Bottom hint */}
-        <div
-          className={`mx-3 mb-4 rounded-xl bg-blue-50 border border-blue-100 transition-all duration-200 overflow-hidden ${
+        <div className={`mx-3 mb-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 transition-all duration-200 overflow-hidden ${
             expanded ? "p-3 opacity-100" : "p-0 opacity-0 h-0 m-0"
-          }`}
-        >
-          <p className="text-xs font-semibold text-blue-700 mb-0.5">Pro tip</p>
-          <p className="text-xs text-blue-600 leading-relaxed">
+          }`}>
+          <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-0.5">Pro tip</p>
+          <p className="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
             Drag & drop tasks on the Kanban board to update status instantly.
           </p>
         </div>

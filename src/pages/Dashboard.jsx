@@ -46,10 +46,10 @@ const Dashboard = () => {
               <LayoutDashboard size={18} className="text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {getGreeting()}, {firstName} 👋
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                 Here's what's happening with your tasks today.
               </p>
             </div>

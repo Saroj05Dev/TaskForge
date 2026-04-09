@@ -68,31 +68,31 @@ const ConflictResolutionModal = () => {
     <Modal open={isOpen} onClose={() => dispatch(clearConflictData())} title="Conflict Detected" icon={Icon} maxWidth="max-w-xl">
       <div className="px-5 py-4 space-y-5">
         {/* Message */}
-        <p className="text-sm text-gray-500">{conflictMessage}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{conflictMessage}</p>
 
         {/* Diff */}
         {Object.keys(diff.changed).length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">What changed</p>
+            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">What changed</p>
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-3">
-                <p className="text-[10px] font-semibold text-blue-600 uppercase tracking-wider mb-2">Server version</p>
+              <div className="rounded-xl border border-blue-100 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/10 p-3">
+                <p className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Server version</p>
                 <div className="space-y-2">
                   {Object.entries(diff.changed).map(([key, val]) => (
                     <div key={key}>
-                      <p className="text-[10px] text-gray-500 font-medium">{formatFieldName(key)}</p>
-                      <p className="text-xs text-gray-800 bg-white rounded-lg px-2 py-1 mt-0.5 border border-blue-100 wrap-break-word">{formatFieldValue(key, val.server)}</p>
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">{formatFieldName(key)}</p>
+                      <p className="text-xs text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 rounded-lg px-2 py-1 mt-0.5 border border-blue-100 dark:border-blue-800 wrap-break-word">{formatFieldValue(key, val.server)}</p>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="rounded-xl border border-green-100 bg-green-50/50 p-3">
-                <p className="text-[10px] font-semibold text-green-600 uppercase tracking-wider mb-2">Your changes</p>
+              <div className="rounded-xl border border-green-100 dark:border-green-900 bg-green-50/50 dark:bg-green-900/10 p-3">
+                <p className="text-[10px] font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider mb-2">Your changes</p>
                 <div className="space-y-2">
                   {Object.entries(diff.changed).map(([key, val]) => (
                     <div key={key}>
-                      <p className="text-[10px] text-gray-500 font-medium">{formatFieldName(key)}</p>
-                      <p className="text-xs text-gray-800 bg-white rounded-lg px-2 py-1 mt-0.5 border border-green-100 wrap-break-word">{formatFieldValue(key, val.local)}</p>
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">{formatFieldName(key)}</p>
+                      <p className="text-xs text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 rounded-lg px-2 py-1 mt-0.5 border border-green-100 dark:border-green-800 wrap-break-word">{formatFieldValue(key, val.local)}</p>
                     </div>
                   ))}
                 </div>
@@ -103,26 +103,30 @@ const ConflictResolutionModal = () => {
 
         {/* Strategy picker */}
         <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Choose resolution</p>
+          <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Choose resolution</p>
           <div className="space-y-2">
-            {STRATEGIES.map(({ id, icon: Icon, iconBg, iconColor, border, activeBorder, label, desc }) => (
+            {STRATEGIES.map(({ id, icon: Icon, iconBg, iconColor, label, desc }) => (
               <button
                 key={id}
                 onClick={() => handleResolve(id)}
                 disabled={saving}
                 onMouseEnter={() => setHovered(id)}
                 onMouseLeave={() => setHovered(null)}
-                className={`w-full flex items-center gap-3 p-3.5 rounded-xl border-2 border-gray-100 transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed text-left
-                  ${hovered === id ? (id === "overwrite" ? "border-blue-300 bg-blue-50/50" : id === "merge" ? "border-green-300 bg-green-50/50" : "border-red-200 bg-red-50/50") : "border-gray-100"}`}
+                className={`w-full flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed text-left
+                  ${hovered === id
+                    ? id === "overwrite" ? "border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/20"
+                    : id === "merge"     ? "border-green-300 dark:border-green-700 bg-green-50/50 dark:bg-green-900/20"
+                    :                     "border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/20"
+                    : "border-gray-100 dark:border-gray-800"}`}
               >
                 <div className={`p-2 rounded-xl shrink-0 ${iconBg}`}>
                   <Icon size={15} className={iconColor} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900">{label}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{label}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{desc}</p>
                 </div>
-                {saving && <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin shrink-0" />}
+                {saving && <div className="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-transparent rounded-full animate-spin shrink-0" />}
               </button>
             ))}
           </div>

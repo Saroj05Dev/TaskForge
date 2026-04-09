@@ -31,76 +31,36 @@ const TaskPresenter = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <BackButton />
-            <div className="w-px h-5 bg-gray-200" />
+            <div className="w-px h-5 bg-gray-200 dark:bg-gray-700" />
             <div className="p-2 bg-blue-600 rounded-xl shadow-sm">
               <CheckSquare size={17} className="text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">All Tasks</h1>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">All Tasks</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {tasks.length} task{tasks.length !== 1 ? "s" : ""} · click any card to view details
               </p>
             </div>
           </div>
 
-          <button
-            onClick={onAdd}
-            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-150 shadow-sm hover:shadow cursor-pointer self-start sm:self-auto"
-          >
-            <Plus size={17} />
-            Add Task
+          <button onClick={onAdd} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-150 shadow-sm hover:shadow cursor-pointer self-start sm:self-auto">
+            <Plus size={17} />Add Task
           </button>
         </div>
 
         {/* Search + Filters */}
         <div className="flex flex-col md:flex-row gap-3">
-          <SearchBar
-            value={searchText}
-            onChange={onSearchChange}
-            onClear={onSearchClear}
-            placeholder="Search by title or description..."
-          />
-          <FilterDropdowns
-            filters={filters}
-            onChange={onFilterChange}
-            onClear={onFiltersClear}
-          />
+          <SearchBar value={searchText} onChange={onSearchChange} onClear={onSearchClear} placeholder="Search by title or description..." />
+          <FilterDropdowns filters={filters} onChange={onFilterChange} onClear={onFiltersClear} />
         </div>
 
-        {/* Task grid */}
-        <TaskList
-          tasks={tasks}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onShare={onShare}
-          onSmartAssign={onSmartAssign}
-        />
+        <TaskList tasks={tasks} onEdit={onEdit} onDelete={onDelete} onShare={onShare} onSmartAssign={onSmartAssign} />
       </div>
 
-      {/* Modals */}
-      <TaskFormModal
-        open={openFormModal}
-        onClose={closeFormModal}
-        mode={selectedTask ? "edit" : "create"}
-        initialData={selectedTask}
-        onSubmit={(data) => (selectedTask ? onUpdate(data) : onCreate(data))}
-      />
-      <DeleteConfirmModal
-        open={openDeleteModal}
-        onClose={closeDeleteModal}
-        onConfirm={onConfirmDelete}
-        taskTitle={selectedTask?.title}
-      />
-      <ShareTaskModal
-        open={openShareModal}
-        onClose={closeShareModal}
-        task={selectedTask}
-      />
-      <SmartAssignModal
-        open={openSmartAssignModal}
-        onClose={closeSmartAssignModal}
-        task={selectedTask}
-      />
+      <TaskFormModal open={openFormModal} onClose={closeFormModal} mode={selectedTask ? "edit" : "create"} initialData={selectedTask} onSubmit={(data) => (selectedTask ? onUpdate(data) : onCreate(data))} />
+      <DeleteConfirmModal open={openDeleteModal} onClose={closeDeleteModal} onConfirm={onConfirmDelete} taskTitle={selectedTask?.title} />
+      <ShareTaskModal open={openShareModal} onClose={closeShareModal} task={selectedTask} />
+      <SmartAssignModal open={openSmartAssignModal} onClose={closeSmartAssignModal} task={selectedTask} />
     </DashboardLayout>
   );
 };

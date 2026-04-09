@@ -33,15 +33,13 @@ const Modal = ({ open, onClose, title, icon, maxWidth = "max-w-lg", children }) 
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full ${maxWidth} bg-white rounded-2xl shadow-2xl shadow-black/10 border border-gray-100 flex flex-col max-h-[90vh] overflow-hidden`}
+        className={`relative w-full ${maxWidth} bg-white dark:bg-gray-900 rounded-2xl shadow-2xl shadow-black/10 border border-gray-100 dark:border-gray-800 flex flex-col max-h-[90vh] overflow-hidden`}
       >
         {/* Header — only rendered when title is provided */}
         {title && (
-          <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 shrink-0">
-            {icon && (
-              <div className="shrink-0">{icon}</div>
-            )}
-            <h2 className="flex-1 text-base font-semibold text-gray-900">{title}</h2>
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
+            {icon && <div className="shrink-0">{icon}</div>}
+            <h2 className="flex-1 text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
             <button
               onClick={onClose}
               className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer shrink-0"

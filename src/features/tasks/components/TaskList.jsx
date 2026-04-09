@@ -4,7 +4,7 @@ import { FolderOpen } from "lucide-react";
 const TaskList = ({ tasks, onEdit, onDelete, onShare, onSmartAssign }) => {
   if (!tasks || tasks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 px-4 bg-white rounded-2xl border border-dashed border-gray-200">
+      <div className="flex flex-col items-center justify-center py-20 px-4 bg-white dark:bg-gray-900 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
         <div className="w-14 h-14 bg-gray-50 border border-gray-200 rounded-2xl flex items-center justify-center mb-4">
           <FolderOpen className="h-7 w-7 text-gray-400" />
         </div>
