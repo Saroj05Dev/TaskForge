@@ -22,6 +22,8 @@ import {
 } from "@/utils/validation";
 import { useToast } from "@/contexts/ToastContext";
 
+import AuthLayout from "@/layouts/AuthLayout";
+
 const SignupPresenter = ({ onSubmit, loading, error }) => {
   const [formData, setFormData] = useState({
     fullName: "",

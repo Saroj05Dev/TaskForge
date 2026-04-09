@@ -118,15 +118,6 @@ const Navbar = ({ onMenuClick }) => {
 
   return (
     <nav className="h-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3 px-4 md:px-6 shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.04)] z-40">
-      {/* Mobile menu toggle — only needed on lg+ where sidebar exists */}
-      <button
-        onClick={onMenuClick}
-        className="hidden lg:flex p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors shrink-0"
-        aria-label="Toggle menu"
-      >
-        <Menu size={20} />
-      </button>
-
       {/* Logo — mobile only */}
       <div
         className="lg:hidden flex items-center shrink-0 cursor-pointer"
@@ -141,8 +132,10 @@ const Navbar = ({ onMenuClick }) => {
       <div
         ref={searchWrapRef}
         className={`relative min-w-0 transition-all duration-200 ${
-          user ? "flex-1 max-w-md" : "flex-1 max-w-xs"
-        } ${isFocused && user ? "max-w-lg" : ""}`}
+          user
+            ? `flex-1 ${isFocused ? "max-w-lg" : ""}`
+            : "w-32 sm:w-48 lg:flex-1 lg:max-w-md"
+        }`}
       >
         {/* Input */}
         <div
@@ -243,73 +236,72 @@ const Navbar = ({ onMenuClick }) => {
         )}
       </div>
 
-      {/* Spacer — only when logged in so buttons don't get pushed off */}
-      {user && <div className="flex-1" />}
+      {/* No spacer needed — flex-1 search fills space, toggle+avatar sit at end */}
 
-      {/* Dark mode toggle */}
-      <button
-        onClick={toggle}
-        className="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 cursor-pointer shrink-0"
-        aria-label="Toggle dark mode"
-        title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      >
-        {isDark
-          ? <Sun size={18} className="text-amber-400" />
-          : <Moon size={18} />
-        }
-      </button>
+      {/* ── Right side: theme toggle + user menu / auth buttons ── */}
+      <div className="flex items-center gap-2 shrink-0 ml-auto">
+        {/* Dark mode toggle */}
+        <button
+          onClick={toggle}
+          className="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 cursor-pointer"
+          aria-label="Toggle dark mode"
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {isDark ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+        </button>
 
-      {/* ── User menu ── */}
-      {user ? (
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setDropdownOpen((o) => !o)}
-            className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-all duration-150"
-          >
-            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-sm shrink-0">
-              {initials}
-            </div>
-            <span className="hidden sm:block text-sm font-medium text-gray-500 dark:text-gray-400 max-w-[120px] truncate">
-              {user.fullName}
-            </span>
-            <ChevronDown
-              size={14}
-              className={`hidden sm:block text-gray-400 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {dropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-lg py-1.5 z-50">
-              <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-800 mb-1">
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user.fullName}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+        {/* ── User menu ── */}
+        {user ? (
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setDropdownOpen((o) => !o)}
+              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-all duration-150 cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-sm shrink-0">
+                {initials}
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
-              >
-                <LogOut size={15} />
-                Sign out
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => navigate("/login")}
-            className="px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => navigate("/signup")}
-            className="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
-          >
-            Sign Up
-          </button>
-        </div>
-      )}
+              <span className="hidden sm:block text-sm font-medium text-gray-500 dark:text-gray-400 max-w-[120px] truncate">
+                {user.fullName}
+              </span>
+              <ChevronDown
+                size={14}
+                className={`hidden sm:block text-gray-400 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-lg py-1.5 z-50">
+                <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-800 mb-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user.fullName}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                >
+                  <LogOut size={15} />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <button
+              onClick={() => navigate("/login")}
+              className="px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => navigate("/signup")}
+              className="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
+            >
+              Sign Up
+            </button>
+          </>
+        )}
+      </div>
     </nav>
   );
 };

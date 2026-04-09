@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import { validateEmail, validatePassword } from "@/utils/validation";
 import { useToast } from "@/contexts/ToastContext";
 
+import AuthLayout from "@/layouts/AuthLayout";
+
 const LoginPresenter = ({
   email,
   password,
