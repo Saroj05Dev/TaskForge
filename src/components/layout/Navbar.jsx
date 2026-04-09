@@ -140,7 +140,9 @@ const Navbar = ({ onMenuClick }) => {
       {/* ── Search with suggestions ── */}
       <div
         ref={searchWrapRef}
-        className={`relative flex-1 max-w-md transition-all duration-200 ${isFocused ? "max-w-lg" : ""}`}
+        className={`relative min-w-0 transition-all duration-200 ${
+          user ? "flex-1 max-w-md" : "flex-1 max-w-xs"
+        } ${isFocused && user ? "max-w-lg" : ""}`}
       >
         {/* Input */}
         <div
@@ -241,8 +243,8 @@ const Navbar = ({ onMenuClick }) => {
         )}
       </div>
 
-      {/* Spacer */}
-      <div className="flex-1" />
+      {/* Spacer — only when logged in so buttons don't get pushed off */}
+      {user && <div className="flex-1" />}
 
       {/* Dark mode toggle */}
       <button
@@ -293,16 +295,16 @@ const Navbar = ({ onMenuClick }) => {
           )}
         </div>
       ) : (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
           >
             Login
           </button>
           <button
             onClick={() => navigate("/signup")}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+            className="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
           >
             Sign Up
           </button>
