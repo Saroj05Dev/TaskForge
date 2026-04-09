@@ -86,8 +86,8 @@ const Dashboard = () => {
         <section>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Kanban Board</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Drag and drop to update task status</p>
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-500">Kanban Board</h2>
+              <p className="text-xs text-gray-400 dark:text-gray-600 mt-0.5">Drag and drop to update task status</p>
             </div>
           </div>
           <KanbanBoard />

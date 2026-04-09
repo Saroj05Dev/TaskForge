@@ -267,7 +267,7 @@ const Navbar = ({ onMenuClick }) => {
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-sm shrink-0">
               {initials}
             </div>
-            <span className="hidden sm:block text-sm font-medium text-gray-700 max-w-[120px] truncate">
+            <span className="hidden sm:block text-sm font-medium text-gray-500 dark:text-gray-400 max-w-[120px] truncate">
               {user.fullName}
             </span>
             <ChevronDown

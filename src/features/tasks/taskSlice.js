@@ -178,12 +178,17 @@ const taskSlice = createSlice({
         task.status = status;
       }
     },
-    // Update single task in list (for socket events)
+    // Update single task in list (for socket events) — preserve computed fields
     updateTaskInList(state, action) {
       const updatedTask = action.payload;
       const index = state.items.findIndex((t) => t._id === updatedTask._id);
       if (index !== -1) {
-        state.items[index] = updatedTask;
+        const originalTask = state.items[index];
+        state.items[index] = {
+          ...updatedTask,
+          // sharedWith is computed server-side and not included in socket payloads
+          sharedWith: updatedTask.sharedWith ?? originalTask.sharedWith,
+        };
       }
     },
     // Conflict management
@@ -326,15 +331,20 @@ const taskSlice = createSlice({
         const updatedTask = action.payload;
         const index = state.items.findIndex((t) => t._id === updatedTask._id);
         if (index !== -1) {
-          // Preserve sharedWith field if backend doesn't return it
+          // Always preserve fields the backend doesn't return in a status-only update
           const originalTask = state.items[index];
           state.items[index] = {
             ...updatedTask,
-            sharedWith: updatedTask.sharedWith || originalTask.sharedWith,
+            sharedWith: updatedTask.sharedWith ?? originalTask.sharedWith,
+            // Keep the optimistic status if server somehow returned old one
+            status: updatedTask.status || originalTask.status,
           };
+          // Clean up previousStatus
+          delete state.items[index].previousStatus;
         }
       })
       .addCase(persistTaskStatus.rejected, (state, action) => {
+        // Roll back optimistic update on failure
         const { id } = action.payload || {};
         const task = state.items.find((t) => t._id === id);
         if (task && task.previousStatus) {
